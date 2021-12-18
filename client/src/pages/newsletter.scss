@@ -1,0 +1,75 @@
+@use "../sass/variables";
+
+#newsletter-page {
+    .background-bubbles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .art {
+        position: absolute;
+        top: 41rem;
+        left: 95rem;
+        width: 350rem;
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
+    .message {
+        position: absolute;
+        top: 108rem;
+        left: 95rem;
+        width: 92.5rem;
+        > .form {
+            border: 0.25px solid variables.$color-white-dark;
+            border-radius: 4rem;
+            padding: 4rem 8rem;
+            margin-bottom: 4rem;
+            .names {
+                display: flex;
+                justify-content: space-between;
+                > * {
+                    width: 49%;
+                }
+            }
+            > form > .bottom {
+                display: flex;
+                justify-content: flex-end;
+                > .signup {
+                    margin: 2rem 0;
+                }
+            }
+            > form > .submit-message {
+                text-align: center;
+            }
+        }
+        > .bottom {
+            text-align: center;
+        }
+    }
+}
+.react-select-container {
+    margin: 3rem 0;
+    > .react-select__control {
+        box-shadow: none;
+        &:hover {
+            border-color: variables.$color-primary;
+        }
+        > .react-select__value-container {
+        }
+        > .react-select__indicators {
+        }
+    }
+    > .react-select__menu {
+        > .react-select__menu-list {
+            > .react-select__option {
+            }
+        }
+    }
+}

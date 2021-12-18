@@ -1,0 +1,71 @@
+#home {
+    pointer-events: all;
+
+    svg {
+        width: 100%;
+        height: auto;
+    }
+    > .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 378.5rem;
+        padding: 40rem 50rem;
+        > .message {
+            width: 139.25rem;
+        }
+        > .art {
+            width: 209.54rem;
+        }
+    }
+    > .slide1 {
+        margin-top: 66rem;
+        > .intro {
+            width: 179rem;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 10rem;
+        }
+        > .content {
+            width: 280.5rem;
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto;
+            > div {
+                width: 63.5rem;
+                text-align: center;
+                img {
+                    &.connect {
+                        width: 45rem;
+                    }
+                    &.explore {
+                        width: 60rem;
+                    }
+                    &.find {
+                        width: 45rem;
+                    }
+                }
+            }
+        }
+    }
+
+    > .slide2 {
+        width: 135rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 60rem auto 70rem auto;
+        > .art {
+            width: 57.75rem;
+        }
+    }
+
+    .background-bubbles {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+}

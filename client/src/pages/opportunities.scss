@@ -1,0 +1,73 @@
+@use "../sass/variables";
+
+#home {
+    > .main {
+        margin-top: 32rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        > .title {
+            margin-bottom: 8rem;
+        }
+        > .filters {
+            margin-bottom: 16rem;
+        }
+        > .opportunities-list {
+            min-width: 180rem;
+            width: 260rem;
+            margin-bottom: 40rem;
+            @media (max-width: 1040px) {
+                width: 100%;
+            }
+            > .list-item {
+                border: 1px solid variables.$color-primary-lightest;
+                transition: all 440ms;
+                border-radius: 2rem;
+                margin: 0 1rem 2rem 1rem;
+                &:hover {
+                    background-color: variables.$color-white-dark;
+                    border: 1px solid variables.$color-white-dark;
+                }
+                padding: 4rem;
+                height: 16rem;
+                display: flex;
+                gap: 2rem;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                > * {
+                    height: 16rem;
+                    flex-grow: 0;
+                }
+                > .middle {
+                    flex-grow: 1;
+                    .facility-name {
+                        margin-right: 4rem;
+                    }
+                    > * {
+                        margin-bottom: 0.5rem;
+                    }
+                }
+                > .left {
+                    flex-shrink: 0;
+                    width: 16rem;
+                    border-radius: 1rem;
+                    overflow: hidden;
+                }
+                > .right {
+                    display: flex;
+                    align-items: center;
+                    opacity: 0;
+                    transition: opacity 220ms;
+                }
+                &:hover {
+                    > .right {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}

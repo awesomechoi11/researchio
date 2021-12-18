@@ -1,0 +1,94 @@
+#recruiter-page {
+    svg,
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    > .background-bubbles {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+    }
+    > .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 329.68rem;
+        margin: 0 auto;
+        margin-top: 41.25rem;
+        > .art {
+            height: 167.71rem;
+        }
+        > .message {
+            width: 129.5rem;
+        }
+    }
+    > .slide1 {
+        margin-top: 60rem;
+        h2 {
+            text-align: center;
+        }
+        > .content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            > .art {
+                width: 138.75rem;
+                margin-right: 6rem;
+            }
+            > .points {
+                li {
+                    display: flex;
+                    align-items: center;
+                }
+                img {
+                    width: 11rem;
+                    height: 11rem;
+                    margin-right: 8rem;
+                }
+                p {
+                    display: inline;
+                }
+            }
+        }
+    }
+    > .slide2 {
+        margin-top: 84rem;
+        > h2 {
+            width: 194rem;
+            text-align: center;
+            margin: 0 auto 10rem auto;
+        }
+        > .content {
+            display: flex;
+            justify-content: center;
+            img {
+                width: 57rem;
+            }
+            > div {
+                display: flex;
+                flex-direction: column;
+                width: 73.75rem;
+                text-align: center;
+                align-items: center;
+                margin: 0 20rem;
+            }
+        }
+    }
+    > .slide3 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 84rem;
+
+        > .art {
+            width: 69rem;
+        }
+        > h2 {
+            width: 154.25rem;
+            text-align: center;
+        }
+    }
+}

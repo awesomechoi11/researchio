@@ -1,0 +1,73 @@
+@use "./variables";
+#navbar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    a {
+        font-size: variables.$font-size-bigger;
+        // font-weight: variables.$font-bold;
+        text-decoration: none;
+        transition: font-size 380ms;
+    }
+    .inner {
+        padding: 0 28rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: height 440ms;
+        > .left,
+        > .right {
+            display: flex;
+            align-items: center;
+            > .title {
+                margin-right: 36rem;
+                a {
+                    color: variables.$color-primary;
+                }
+            }
+            > .buttons {
+                display: flex;
+                > * {
+                    margin-right: 16rem;
+                }
+            }
+        }
+    }
+}
+
+#nav-profile {
+    > button {
+        cursor: pointer;
+        padding: 1rem;
+        background-color: #0000;
+        &.active path {
+            fill: variables.$color-primary;
+        }
+    }
+    a {
+        font-size: variables.$font-size-normal;
+    }
+    > .popup {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        border: 0.25rem solid variables.$color-primary-lightest;
+        border-radius: 1rem;
+        transition: opacity 220ms;
+        > * {
+            margin-bottom: 1rem;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            transition: background-color 220ms;
+            cursor: pointer;
+            &:hover {
+                background-color: variables.$color-white-dark;
+            }
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+}

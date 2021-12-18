@@ -1,0 +1,173 @@
+@use "./variables";
+
+.modal-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+}
+.modal-container {
+    min-height: 100vh;
+    background: rgba(30, 27, 70, 0.39);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .inner {
+        width: 144rem;
+        padding: 6rem;
+        background: variables.$color-white;
+        border-radius: 4rem;
+        margin: 35rem 0;
+    }
+}
+
+#login-modal {
+    > .inner {
+        width: 156rem;
+        height: 147.5rem;
+        display: flex;
+        padding: 0;
+
+        > * {
+            width: 50%;
+        }
+        > .left {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4rem 0 0 4rem;
+            > .login-graphic {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        > .right {
+            padding: 24rem 12rem 12rem 12rem;
+            width: calc(50% - 24rem);
+            > .form-wrapper {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 100%;
+                form {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    > * {
+                        margin-bottom: 2rem;
+                    }
+                    button {
+                        margin: 6rem 0;
+                    }
+                }
+                > .top {
+                    .login-message {
+                        margin-bottom: 6rem;
+                        > * {
+                            margin-bottom: 2rem;
+                        }
+                    }
+                }
+                > .bottom {
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+#opportunity-modal {
+    // padding: 175px 650px 0 650px;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    > .inner {
+        > .basic-info {
+            display: flex;
+            gap: 2rem;
+
+            margin-bottom: 4rem;
+            > .left {
+                flex-grow: 0;
+            }
+            > .right {
+                flex-grow: 1;
+            }
+
+            > .left {
+                flex-shrink: 0;
+                flex-grow: 0;
+                width: 16rem;
+                height: 16rem;
+                border-radius: 1rem;
+                overflow: hidden;
+            }
+            > .right {
+                flex-grow: 1;
+                > * {
+                    margin-bottom: 1rem;
+                }
+                .facility-name {
+                    margin-right: 4rem;
+                }
+            }
+        }
+        > .user-utility {
+            display: flex;
+            justify-content: space-between;
+            > .save-button {
+                display: inline-flex;
+                align-items: center;
+                border-radius: 1rem;
+                user-select: none;
+                cursor: pointer;
+                padding: 1rem;
+                &:hover {
+                    background-color: variables.$color-white-dark;
+                }
+                > svg {
+                    margin-right: 2rem;
+                }
+            }
+        }
+        > .detailed-info {
+            table {
+                width: 100%;
+            }
+            > * {
+                margin-bottom: 4rem;
+                &:last-child {
+                    margin: 0;
+                }
+            }
+            .label {
+                margin-bottom: 2rem;
+            }
+            > .description > .body {
+                padding: 2rem;
+                background: variables.$color-white-dark;
+                border-radius: 2rem;
+            }
+            .principal-investigator {
+                padding: 1rem 2rem;
+                display: flex;
+                justify-content: space-between;
+                gap: 2rem;
+                > .left {
+                    width: 10rem;
+                    height: 10rem;
+                    border-radius: 5rem;
+                    overflow: hidden;
+                }
+                > .right {
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+}

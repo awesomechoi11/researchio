@@ -1,0 +1,250 @@
+@use "./sass/_variables";
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap");
+
+@import "./sass/dropdowns.scss";
+@import "./sass/modal.scss";
+@import "./sass/navbar.scss";
+html,
+body,
+#root,
+.root-layer {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Nunito", sans-serif;
+    font-weight: variables.$font-normal;
+    font-size: variables.$font-size-normal;
+    background-color: variables.$color-white;
+    color: variables.$color-secondary;
+}
+html {
+    // font-size: 4px;
+    font-size: 0.208333333333vw;
+}
+a,
+input,
+button {
+    font-family: "Nunito", sans-serif;
+}
+
+.root-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    overflow: auto;
+    overflow-x: hidden;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    > * {
+        pointer-events: all;
+    }
+}
+#layer1 {
+    z-index: 1;
+    pointer-events: all;
+}
+#layer2 {
+    z-index: 2;
+}
+#layer3 {
+    z-index: 3;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 1rem;
+    padding: 2rem 4rem;
+    background-color: variables.$color-primary;
+    color: variables.$color-white;
+    font-weight: variables.$font-bold;
+    font-size: variables.$font-size-big;
+    outline: none;
+    border: none;
+    transition: background-color 220ms;
+    &:hover {
+        background-color: variables.$color-secondary-light;
+    }
+    &.button-jumbo {
+        padding: 4rem 8rem;
+    }
+    &[disabled] {
+        pointer-events: none;
+        background-color: variables.$color-secondary-lightest;
+    }
+}
+
+a {
+    text-decoration: none;
+    transition: color 220ms;
+    &.active {
+        font-weight: variables.$font-bold;
+    }
+    &:link {
+        color: variables.$color-secondary;
+    }
+    &:visited {
+        color: variables.$color-secondary;
+    }
+    &:hover {
+        color: variables.$color-secondary-light;
+    }
+    &:active {
+        color: variables.$color-secondary;
+    }
+    &.button {
+        cursor: pointer;
+        border-radius: 1rem;
+        padding: 2rem 4rem;
+        background-color: variables.$color-primary;
+        color: variables.$color-white;
+        font-weight: variables.$font-bold;
+        font-size: variables.$font-size-big;
+        outline: none;
+        border: none;
+        transition: background-color 220ms;
+        &:hover {
+            background-color: variables.$color-secondary-light;
+        }
+        &.button-jumbo {
+            padding: 4rem 8rem;
+        }
+        &[disabled] {
+            pointer-events: none;
+            background-color: variables.$color-secondary-lightest;
+        }
+    }
+}
+
+h1 {
+    font-size: 16rem;
+    font-weight: variables.$font-normal;
+}
+h2 {
+    font-size: 12rem;
+    font-weight: variables.$font-normal;
+}
+h3 {
+    font-size: 9rem;
+    font-weight: variables.$font-normal;
+}
+p {
+    font-size: 6rem;
+    font-weight: variables.$font-normal;
+}
+
+.fw-bold {
+    font-weight: variables.$font-bold;
+}
+.fw-normal {
+    font-weight: variables.$font-normal;
+}
+.fs-small {
+    font-size: variables.$font-size-small;
+}
+.fs-jumbo {
+    font-size: variables.$font-size-jumbo;
+}
+.fs-big {
+    font-size: variables.$font-size-big;
+}
+.fs-bigger {
+    font-size: variables.$font-size-bigger;
+}
+.fs-normal {
+    font-size: variables.$font-size-normal;
+}
+.fc-normal {
+    color: variables.$color-secondary;
+}
+.fc-light {
+    color: variables.$color-secondary-light;
+}
+.fc-primary {
+    color: variables.$color-primary;
+}
+.fc-secondary-light {
+    color: variables.$color-secondary-light;
+}
+
+.divider {
+    height: 0.25rem;
+    margin: 4rem 1rem;
+    background-color: variables.$color-secondary-lightest;
+}
+
+table {
+    border-spacing: 0;
+
+    td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 2rem 0;
+    }
+    th {
+        color: variables.$color-secondary-light;
+    }
+}
+
+.pill {
+    padding: 1rem 2rem;
+    border-radius: 4rem;
+    background-color: variables.$color-primary-lightest;
+    margin-right: 1rem;
+}
+
+.error {
+    font-size: variables.$font-size-small;
+    color: variables.$color-error;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.input-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+    > label {
+        pointer-events: none;
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        opacity: 1;
+        color: variables.$color-secondary-light;
+        font-size: variables.$font-size-normal;
+        transition: color 220ms, font-size 220ms, top 220ms;
+        user-select: none;
+    }
+    > input {
+        width: 100%;
+        box-sizing: border-box;
+        border: solid #0000 0.25rem;
+        outline: none;
+        padding: 2rem;
+        background-color: variables.$color-white-dark;
+        border-radius: 1rem;
+        transition: border 220ms;
+        &:focus,
+        &:active {
+            border: solid variables.$color-primary 0.25rem;
+        }
+        &:focus,
+        &:active,
+        &:valid {
+            & + label {
+                color: variables.$color-secondary-lightest;
+                font-size: variables.$font-size-small;
+                top: -4rem;
+            }
+        }
+        &.has-error {
+            border: solid variables.$color-error 0.25rem;
+        }
+    }
+    > .error {
+        margin-top: 1rem;
+    }
+}
