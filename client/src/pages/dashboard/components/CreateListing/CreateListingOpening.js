@@ -395,7 +395,15 @@ export default function CreateListingOpening() {
                         >
                             <div className="item-inner-wrapper">
                                 <DetailTable itemData={itemData} />
-                                <div>
+                                <div className="description">
+                                    <div className="label fc-light">
+                                        opening description
+                                    </div>
+                                    <div className="body">
+                                        {itemData.description}
+                                    </div>
+                                </div>
+                                <div className="item-section">
                                     <div className="label fc-light">
                                         majors considered
                                     </div>
@@ -410,7 +418,7 @@ export default function CreateListingOpening() {
                                     </div>
                                 </div>
                                 {itemData.desiredTechnicalSkills && (
-                                    <div className="">
+                                    <div className="item-section">
                                         <div className="label fc-light">
                                             technical skills
                                         </div>
@@ -425,14 +433,6 @@ export default function CreateListingOpening() {
                                         </div>
                                     </div>
                                 )}
-                                <div className="description">
-                                    <div className="label fc-light">
-                                        opening description
-                                    </div>
-                                    <div className="body">
-                                        {itemData.description}
-                                    </div>
-                                </div>
                             </div>
                         </DashboardGridBlockItem>
                     ))
