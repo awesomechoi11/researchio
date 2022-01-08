@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector, useRecoilState } from "recoil";
+import { atom, atomFamily, selector } from "recoil";
 
 /*
         get: {
@@ -11,5 +11,18 @@ export const modalAtomFamily = atomFamily({
     default: {
         open: false,
         data: 1,
+    },
+});
+
+export const profileAtomFamily = atomFamily({
+    key: "profile",
+    default: null,
+});
+
+export const createListingProjectAtom = atom({
+    key: "createListingProjectAtom",
+    default: {
+        project: undefined,
+        listing: undefined,
     },
 });

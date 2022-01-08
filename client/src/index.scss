@@ -4,6 +4,8 @@
 @import "./sass/dropdowns.scss";
 @import "./sass/modal.scss";
 @import "./sass/navbar.scss";
+@import "./sass/react-select.scss";
+@import "./sass/datepicker.scss";
 html,
 body,
 #root,
@@ -27,6 +29,7 @@ a,
 input,
 button {
     font-family: "Nunito", sans-serif;
+    font-size: variables.$font-size-normal;
 }
 
 .root-layer {
@@ -64,6 +67,7 @@ button {
     outline: none;
     border: none;
     transition: background-color 220ms;
+
     &:hover {
         background-color: variables.$color-secondary-light;
     }
@@ -115,6 +119,29 @@ a {
             pointer-events: none;
             background-color: variables.$color-secondary-lightest;
         }
+    }
+}
+
+.span-button {
+    cursor: pointer;
+    border-radius: 1rem;
+    padding: 2rem 4rem;
+    background-color: variables.$color-white;
+    color: variables.$color-secondary;
+    font-weight: variables.$font-bold;
+    font-size: variables.$font-size-big;
+    outline: none;
+    border: none;
+    transition: background-color 220ms;
+    &:hover {
+        background-color: variables.$color-white-dark;
+    }
+    &.button-jumbo {
+        padding: 4rem 8rem;
+    }
+    &[disabled] {
+        pointer-events: none;
+        background-color: variables.$color-secondary-lightest;
     }
 }
 
@@ -189,6 +216,7 @@ table {
 }
 
 .pill {
+    display: inline-block;
     padding: 1rem 2rem;
     border-radius: 4rem;
     background-color: variables.$color-primary-lightest;
@@ -242,6 +270,190 @@ table {
         }
         &.has-error {
             border: solid variables.$color-error 0.25rem;
+        }
+    }
+    > .error {
+        margin-top: 1rem;
+    }
+}
+
+.textarea-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+    > label {
+        pointer-events: none;
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        opacity: 1;
+        color: variables.$color-secondary-light;
+        font-size: variables.$font-size-normal;
+        transition: color 220ms, font-size 220ms, top 220ms;
+        user-select: none;
+    }
+    > textarea {
+        font-family: "Nunito", sans-serif;
+        font-weight: variables.$font-normal;
+        font-size: variables.$font-size-normal;
+        color: variables.$color-secondary;
+        max-width: 100%;
+        min-width: 100%;
+        box-sizing: border-box;
+        border: solid #0000 0.25rem;
+        outline: none;
+        padding: 2rem;
+        background-color: variables.$color-white-dark;
+        border-radius: 1rem;
+        transition: border 220ms;
+        &:focus,
+        &:active {
+            border: solid variables.$color-primary 0.25rem;
+        }
+        &:focus,
+        &:active,
+        &:valid {
+            & + label {
+                color: variables.$color-secondary-lightest;
+                font-size: variables.$font-size-small;
+                top: -4rem;
+            }
+        }
+        &.has-error {
+            border: solid variables.$color-error 0.25rem;
+        }
+    }
+    > .error {
+        margin-top: 1rem;
+    }
+}
+
+.radio-group-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+    > label {
+        pointer-events: none;
+        position: absolute;
+        left: 2rem;
+        opacity: 1;
+        transition: color 220ms, font-size 220ms, top 220ms;
+        user-select: none;
+        color: variables.$color-secondary-lightest;
+        font-size: variables.$font-size-small;
+        top: -4rem;
+    }
+    > .radio-group-inner {
+        font-family: "Nunito", sans-serif;
+        font-weight: variables.$font-normal;
+        font-size: variables.$font-size-normal;
+        color: variables.$color-secondary;
+        max-width: 100%;
+        min-width: 100%;
+        box-sizing: border-box;
+        border: solid variables.$color-primary-lightest 0.25rem;
+        outline: none;
+        padding: 2rem;
+        // background-color: variables.$color-white-dark;
+        border-radius: 1rem;
+        transition: border 220ms;
+        display: flex;
+        gap: 2rem;
+        &.has-error {
+            border: solid variables.$color-error 0.25rem;
+        }
+        > .radio label {
+            height: 6rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+    }
+    input {
+        appearance: none;
+        height: 6rem;
+        width: 6rem;
+        border-radius: 1rem;
+        transition: all 0.15s ease-out 0s;
+        background: variables.$color-white-dark;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        margin: 0;
+        margin-right: 1rem;
+        outline: none;
+
+        &:hover {
+            background-color: variables.$color-primary-lightest;
+        }
+        &::before {
+            height: 6rem;
+            width: 6rem;
+        }
+        &:checked::before {
+            position: absolute;
+            content: "X";
+            display: inline-block;
+            font-size: 4.5rem;
+            font-weight: 800;
+            text-align: center;
+        }
+    }
+
+    > .error {
+        margin-top: 1rem;
+    }
+}
+
+.react-select__multi-value {
+    border-radius: 1rem !important;
+    background-color: variables.$color-primary-lightest !important;
+    .react-select__multi-value__label {
+        font-size: 100% !important;
+    }
+}
+
+.react-calendar {
+    margin-top: 1rem;
+    border-radius: 2rem;
+    border: thin solid variables.$color-primary-lightest !important;
+    filter: drop-shadow(0 1rem 0.75rem rgba(0, 0, 0, 0.13));
+}
+
+form .form-group {
+    display: flex;
+    gap: 2rem;
+    > * {
+        flex-grow: 1;
+    }
+}
+
+.input-number-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+    > label {
+        pointer-events: none;
+        position: absolute;
+        left: 2rem;
+        opacity: 1;
+        color: variables.$color-secondary-lightest;
+        font-size: variables.$font-size-small;
+        top: -4rem;
+        user-select: none;
+    }
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        border: solid #0000 0.25rem;
+        outline: none;
+        padding: 2rem;
+        background-color: variables.$color-white-dark;
+    }
+    .rc-input-number {
+        border-radius: 1rem;
+        transition: border 220ms;
+        overflow: hidden;
+        &.has-error {
+            border: solid variables.$color-error thin;
         }
     }
     > .error {

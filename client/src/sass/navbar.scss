@@ -39,17 +39,28 @@
 
 #nav-profile {
     > button {
+        width: 10rem;
+        height: 10rem;
         cursor: pointer;
         padding: 1rem;
         background-color: #0000;
         &.active path {
             fill: variables.$color-primary;
         }
+        &:hover {
+            background-color: variables.$color-white-dark;
+        }
+        svg {
+            width: 8rem;
+            height: 8rem;
+        }
     }
     a {
         font-size: variables.$font-size-normal;
     }
     > .popup {
+        z-index: 1;
+        background-color: variables.$color-white;
         display: flex;
         flex-direction: column;
         padding: 2rem;
@@ -67,6 +78,44 @@
             }
             &:last-child {
                 margin: 0;
+            }
+        }
+    }
+}
+
+#dashboard-navbar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    a {
+        font-size: variables.$font-size-bigger;
+        // font-weight: variables.$font-bold;
+        text-decoration: none;
+        transition: font-size 380ms;
+    }
+    .inner {
+        padding: 0 28rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: height 440ms;
+        > .left,
+        > .right {
+            display: flex;
+            align-items: center;
+            > .title {
+                margin-right: 36rem;
+                a {
+                    color: variables.$color-primary;
+                }
+            }
+            > .buttons {
+                display: flex;
+                > * {
+                    margin-right: 16rem;
+                }
             }
         }
     }

@@ -17,7 +17,8 @@ export default function RecruiterPage() {
             <div className="hero">
                 <div className="message">
                     <h1>
-                        Let The <b>Perfect Candidate</b> Come To <b>You</b>
+                        For Recruiters: Let The <b>Perfect Candidate</b> Come To{" "}
+                        <b>You</b>
                     </h1>
                     <Link
                         className="button button-jumbo calltoaction"

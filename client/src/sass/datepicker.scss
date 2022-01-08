@@ -1,0 +1,40 @@
+@use "./variables";
+
+.date-picker-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+
+    > label {
+        pointer-events: none;
+        position: absolute;
+        left: 2rem;
+        opacity: 1;
+        transition: color 220ms, font-size 220ms, top 220ms;
+        user-select: none;
+        color: variables.$color-secondary-lightest;
+        font-size: variables.$font-size-small;
+        top: -4rem;
+    }
+    button {
+        border-radius: 0;
+        color: variables.$color-secondary-lightest;
+        transition: color 220ms;
+        &:hover {
+            background-color: unset;
+            color: variables.$color-secondary;
+        }
+    }
+}
+
+.react-daterange-picker {
+    display: inline-flex;
+    position: relative;
+}
+
+.react-daterange-picker__wrapper,
+.react-date-picker__wrapper {
+    cursor: pointer;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    border: thin solid variables.$color-primary-lightest !important;
+}

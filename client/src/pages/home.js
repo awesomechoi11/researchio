@@ -8,7 +8,7 @@ import explorepng from "../assets/candidate/explore.png";
 import findpng from "../assets/candidate/find.png";
 
 export default function HomePage() {
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
     return (
         <div id="home">
             <div className="background-bubbles">{backgroundBubbles}</div>

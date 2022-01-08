@@ -1,0 +1,26 @@
+@use "../sass/variables";
+
+#email-confirm-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    > .content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        > .message {
+            padding: 4rem;
+            background-color: variables.$color-white-dark;
+            border-radius: 4rem;
+            width: 60rem;
+            > .art {
+                margin: 10rem;
+            }
+        }
+    }
+}

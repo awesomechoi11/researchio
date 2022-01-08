@@ -1,0 +1,98 @@
+@use "../sass/variables";
+
+#profile-page {
+    padding: 39rem 90rem;
+    .page-title {
+        margin: 0 0 8rem 0;
+    }
+    > .content {
+        display: flex;
+        justify-content: space-between;
+        > .column > .card {
+            padding: 4rem;
+            border-radius: 2rem;
+            border: 0.25rem solid variables.$color-white-dark;
+            width: 88rem;
+            margin-bottom: 4rem;
+            > .header {
+                margin-bottom: 2rem;
+            }
+            .submit-wrapper {
+                display: flex;
+                justify-content: end;
+                margin-top: 4rem;
+                gap: 2rem;
+            }
+            .item-wrapper {
+                > .item {
+                    border-radius: 2rem;
+                    border: 0.25rem solid variables.$color-white-dark;
+                    padding: 2rem;
+                    display: flex;
+
+                    justify-content: space-between;
+                    margin-bottom: 2rem;
+                    > .controls > .item-popup {
+                        opacity: 0;
+                        transition: opacity 180ms;
+                    }
+                    &:hover > .controls > .item-popup,
+                    > .controls > .item-popup.open {
+                        opacity: 1;
+                    }
+                    svg {
+                        width: 6rem;
+                        height: 6rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.item-popup {
+    > button {
+        cursor: pointer;
+        padding: 1rem;
+        background-color: #0000;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 1rem;
+        &.active path {
+            fill: variables.$color-primary;
+        }
+        &:hover {
+            background-color: variables.$color-primary-lightest;
+        }
+    }
+    a {
+        font-size: variables.$font-size-normal;
+    }
+    > .popup {
+        z-index: 1;
+        background-color: variables.$color-white;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        border: 0.25rem solid variables.$color-primary-lightest;
+        border-radius: 1rem;
+        transition: opacity 220ms;
+        > * {
+            user-select: none;
+            margin-bottom: 1rem;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            transition: background-color 220ms;
+            cursor: pointer;
+            &:hover {
+                background-color: variables.$color-white-dark;
+            }
+            &:last-child {
+                margin: 0;
+            }
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+    }
+}

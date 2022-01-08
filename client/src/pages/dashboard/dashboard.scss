@@ -1,0 +1,157 @@
+@use "../../sass/variables";
+
+#dashboard-sidebar {
+    width: 62rem;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 6rem 8rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    > .logo {
+        margin-bottom: 8rem;
+    }
+}
+
+.sidebar-button {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    user-select: none;
+    cursor: pointer;
+    padding: 2rem 4rem;
+    margin-bottom: 2rem;
+    border-radius: 2rem;
+    transition: background-color 360ms;
+    &:hover {
+        background-color: variables.$color-white-dark;
+    }
+    > .icon-wrapper {
+        // width: 6rem;
+        height: 6rem;
+        position: relative;
+        overflow: hidden;
+        transition: width 160ms;
+        width: 0rem;
+        margin-right: 0rem;
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    &:hover > .icon-wrapper,
+    &.active > .icon-wrapper {
+        width: 6rem;
+        margin-right: 2rem;
+    }
+}
+
+.dashboard-grid-block {
+    border: solid variables.$color-primary-lightest 1px;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+    margin-bottom: 6rem;
+    > .title {
+        margin-bottom: 2rem;
+    }
+
+    .submit-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 4rem;
+        gap: 2rem;
+    }
+    .item-wrapper {
+        > .item {
+            border-radius: 2rem;
+            border: 0.25rem solid variables.$color-white-dark;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+
+            &.selected {
+                border: 0.25rem solid variables.$color-primary;
+            }
+            > .content {
+                padding: 2rem;
+            }
+            > .controls {
+                padding: 2rem;
+            }
+
+            > .controls > .item-popup {
+                opacity: 0;
+                transition: opacity 180ms;
+            }
+            &:hover > .controls > .item-popup,
+            > .controls > .item-popup.open {
+                opacity: 1;
+            }
+            svg {
+                width: 6rem;
+                height: 6rem;
+            }
+        }
+    }
+
+    .create-button {
+        cursor: pointer;
+        padding: 8rem !important;
+        justify-content: center !important;
+        align-items: center !important;
+        transition: background-color 220ms;
+        &:hover {
+            background-color: variables.$color-white-dark;
+        }
+    }
+    .item-select-area {
+        flex-grow: 1;
+        cursor: pointer;
+        transition: background-color 220ms;
+        &:hover {
+            background-color: variables.$color-white-dark;
+        }
+        > div > .description {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+    }
+
+    .form-group.row2 {
+        justify-content: start;
+        > * {
+            flex-grow: unset;
+        }
+    }
+}
+
+.dashboard-page {
+    margin-left: 61rem;
+    // margin-top: 23rem;
+    > .page-title {
+        padding: 4rem 6rem;
+    }
+}
+
+.item-inner-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.description {
+    // margin: 2rem;
+    > .body {
+        .label {
+            margin-bottom: 2rem;
+        }
+        padding: 2rem;
+        background: variables.$color-white-dark;
+        border-radius: 2rem;
+    }
+}

@@ -54,22 +54,3 @@
         }
     }
 }
-.react-select-container {
-    margin: 3rem 0;
-    > .react-select__control {
-        box-shadow: none;
-        &:hover {
-            border-color: variables.$color-primary;
-        }
-        > .react-select__value-container {
-        }
-        > .react-select__indicators {
-        }
-    }
-    > .react-select__menu {
-        > .react-select__menu-list {
-            > .react-select__option {
-            }
-        }
-    }
-}

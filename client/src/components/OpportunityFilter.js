@@ -26,7 +26,7 @@ export default function OpportunityFilter({ filterData }) {
 
                     // must be valid filter type
                     const Comp = FilterTypes[type];
-                    if (!Comp) return;
+                    if (!Comp) return undefined;
 
                     if (type === "dropdown") {
                         let dropdownProps = {};
@@ -58,6 +58,7 @@ export default function OpportunityFilter({ filterData }) {
                             />
                         );
                     }
+                    return undefined;
                 })}
             </motion.div>
         </div>

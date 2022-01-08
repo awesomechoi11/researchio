@@ -1,5 +1,14 @@
+import { Outlet, Route, Routes } from "react-router-dom";
+import DashboardSidebar from "./components/DashboardSidebar";
 import "./dashboard.scss";
 
 export default function DashboardPage() {
-    return <div id="dashboard">dashboard!123!</div>;
+    // determine user type
+
+    return (
+        <div id="dashboard-page">
+            <DashboardSidebar />
+            <Outlet />
+        </div>
+    );
 }

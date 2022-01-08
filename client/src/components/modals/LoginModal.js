@@ -1,12 +1,12 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { modalAtomFamily } from "../atoms";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import loginGraphicPng from "../../assets/loginGraphic.png";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import clsx from "clsx";
-import { useMongoDB, useRealmApp } from "../../initMongo";
+import { useRealmApp } from "../../initMongo";
 
 export default function LoginModal() {
     const [modal, setModal] = useRecoilState(modalAtomFamily("login"));
@@ -60,18 +60,6 @@ function Inner() {
                 {loginState.page === "register" && (
                     <RegisterForm setLoginState={setLoginState} />
                 )}
-                {loginState.page === "confirm" && (
-                    <RegisterConfirmForm
-                        loginState={loginState}
-                        setLoginState={setLoginState}
-                    />
-                )}
-                {loginState.page === "complete" && (
-                    <RegisterCompleteForm
-                        loginState={loginState}
-                        setLoginState={setLoginState}
-                    />
-                )}
                 {loginState.page === "login" && (
                     <LoginForm setLoginState={setLoginState} />
                 )}
@@ -91,6 +79,13 @@ const validateRegisterYup = Yup.object({
         .matches(/^(?=.*[A-Z])/, "at least 1 uppercase")
         .matches(/^(?=.*[0-9])/, "at least 1 number")
         .required("Required"),
+    "loginModal-firstName": Yup.string()
+        .min(1, "1-character minimum")
+        .required("Required"),
+    "loginModal-lastName": Yup.string()
+        .min(1, "1-character minimum")
+        .required("Required"),
+    "loginModal-role": Yup.string().required("Required"),
 });
 
 function RegisterForm({ setLoginState }) {
@@ -111,12 +106,8 @@ function RegisterForm({ setLoginState }) {
             };
             await RealmApp.emailPasswordAuth.registerUser(emailpw);
 
-            // if fail ig?
-            // if (register.status !== "pending") return;
-
-            // if pending goto confirm code mode
             setLoginState({
-                page: "confirm",
+                page: "done",
                 data: emailpw,
             });
         },
@@ -148,13 +139,13 @@ function RegisterForm({ setLoginState }) {
                             )}
                         />
                         <label htmlFor="loginModal-email">email</label>
+                        {hasError("loginModal-email") ? (
+                            <div className="error">
+                                {formik.errors["loginModal-email"]}
+                            </div>
+                        ) : null}
                     </div>
 
-                    {hasError("loginModal-email") ? (
-                        <div className="error">
-                            {formik.errors["loginModal-email"]}
-                        </div>
-                    ) : null}
                     <div className="input-wrapper">
                         <input
                             id="loginModal-password"
@@ -167,13 +158,12 @@ function RegisterForm({ setLoginState }) {
                             )}
                         />
                         <label htmlFor="loginModal-password">password</label>
+                        {hasError("loginModal-password") ? (
+                            <div className="error">
+                                {formik.errors["loginModal-password"]}
+                            </div>
+                        ) : null}
                     </div>
-                    {hasError("loginModal-password") ? (
-                        <div className="error">
-                            {formik.errors["loginModal-password"]}
-                        </div>
-                    ) : null}
-
                     <button type="submit">register</button>
                 </form>
             </div>
@@ -191,198 +181,6 @@ function RegisterForm({ setLoginState }) {
     );
 }
 
-const validateConfirmYup = Yup.object({
-    "loginModal-confirm": Yup.string()
-        .length(6, "6 digits required")
-        .required("Required"),
-});
-
-function RegisterConfirmForm({ setLoginState, loginState }) {
-    const { RealmApp, logIn } = useRealmApp();
-
-    const formik = useFormik({
-        initialValues: {
-            "loginModal-confirm": "",
-        },
-
-        validationSchema: validateConfirmYup,
-
-        onSubmit: async (values) => {
-            let code = {
-                email: loginState.data.email,
-                confirmation_code: values["loginModal-confirm"],
-            };
-            let codeCheck =
-                await RealmApp.currentUser.functions.checkEmailConfirmationCode(
-                    code
-                );
-
-            if (!codeCheck.success) return;
-
-            const tokens = {
-                token: codeCheck.message.token,
-                tokenId: codeCheck.message.tokenId,
-            };
-            await RealmApp.emailPasswordAuth.confirmUser(tokens);
-            // console.log("confirmation");
-            // now goto complete profile
-            await logIn("email", loginState.data);
-
-            setLoginState({
-                page: "complete",
-            });
-        },
-    });
-
-    function hasError(elemId) {
-        return formik.touched[elemId] && formik.errors[elemId];
-    }
-
-    return (
-        <div className="form-wrapper">
-            <div className="top">
-                <div className="login-message">
-                    <div className="fs-big fw-bold">Confirm Email</div>
-                    <div className="fc-secondary-light">
-                        Few Steps From Awesomeness!
-                    </div>
-                </div>
-                <form onSubmit={formik.handleSubmit}>
-                    <div className="input-wrapper">
-                        <input
-                            id="loginModal-confirm"
-                            name="loginModal-confirm"
-                            required
-                            type="text"
-                            {...formik.getFieldProps("loginModal-confirm")}
-                            className={clsx(
-                                hasError("loginModal-confirm") && "has-error"
-                            )}
-                        />
-                        <label htmlFor="loginModal-confirm">6 digit code</label>
-                    </div>
-
-                    {hasError("loginModal-confirm") ? (
-                        <div className="error">
-                            {formik.errors["loginModal-confirm"]}
-                        </div>
-                    ) : null}
-
-                    <button type="submit">confirm</button>
-                </form>
-            </div>
-            <div className="bottom"></div>
-        </div>
-    );
-}
-
-const validateCompleteYup = Yup.object({
-    "loginModal-firstName": Yup.string()
-        .min(1, "1-character minimum")
-        .required("Required"),
-    "loginModal-lastName": Yup.string()
-        .min(1, "1-character minimum")
-        .required("Required"),
-});
-
-function RegisterCompleteForm({ setLoginState, loginState }) {
-    const { updateProfile } = useMongoDB();
-
-    const formik = useFormik({
-        initialValues: {
-            "loginModal-firstName": "",
-            "loginModal-lastName": "",
-        },
-
-        validationSchema: validateCompleteYup,
-
-        onSubmit: async (values) => {
-            const data = {
-                firstName: values["loginModal-firstName"],
-                lastName: values["loginModal-lastName"],
-            };
-            await updateProfile(data);
-
-            setLoginState({
-                page: "done",
-            });
-        },
-    });
-
-    function hasError(elemId) {
-        return formik.touched[elemId] && formik.errors[elemId];
-    }
-
-    return (
-        <div className="form-wrapper">
-            <div className="top">
-                <div className="login-message">
-                    <div className="fs-big fw-bold">Complete Your Profile</div>
-                    <div className="fc-secondary-light">
-                        Few Steps From Awesomeness!
-                    </div>
-                </div>
-                <form onSubmit={formik.handleSubmit}>
-                    <div className="input-wrapper">
-                        <input
-                            id="loginModal-firstName"
-                            name="loginModal-firstName"
-                            required
-                            type="text"
-                            {...formik.getFieldProps("loginModal-firstName")}
-                            className={clsx(
-                                hasError("loginModal-firstName") && "has-error"
-                            )}
-                        />
-                        <label htmlFor="loginModal-firstName">first name</label>
-                    </div>
-
-                    {hasError("loginModal-firstName") ? (
-                        <div className="error">
-                            {formik.errors["loginModal-firstName"]}
-                        </div>
-                    ) : null}
-                    <div className="input-wrapper">
-                        <input
-                            id="loginModal-lastName"
-                            name="loginModal-lastName"
-                            required
-                            type="text"
-                            {...formik.getFieldProps("loginModal-lastName")}
-                            className={clsx(
-                                hasError("loginModal-lastName") && "has-error"
-                            )}
-                        />
-                        <label htmlFor="loginModal-lastName">last name</label>
-                    </div>
-
-                    {hasError("loginModal-lastName") ? (
-                        <div className="error">
-                            {formik.errors["loginModal-lastName"]}
-                        </div>
-                    ) : null}
-                    <button type="submit">complete</button>
-                </form>
-            </div>
-            <div
-                className="bottom cursor-pointer fc-primary-light"
-                onClick={async () => {
-                    const data = {
-                        firstName: formik.values["loginModal-firstName"],
-                        lastName: formik.values["loginModal-lastName"],
-                    };
-                    await updateProfile(data);
-                    setLoginState({
-                        page: "done",
-                    });
-                }}
-            >
-                save & finish later
-            </div>
-        </div>
-    );
-}
-
 function RegisterDone() {
     const setModal = useSetRecoilState(modalAtomFamily("login"));
 
@@ -390,9 +188,9 @@ function RegisterDone() {
         <div className="form-wrapper">
             <div className="top">
                 <div className="login-message">
-                    <div className="fs-big fw-bold">All Done!</div>
+                    <div className="fs-big fw-bold">Check Your Email!</div>
                     <div className="fc-secondary-light">
-                        You are now ready...
+                        You are almost done!
                     </div>
                 </div>
             </div>
@@ -416,7 +214,7 @@ const validateLoginYup = Yup.object({
 });
 
 function LoginForm({ setLoginState }) {
-    const { RealmApp, logIn } = useRealmApp();
+    const { logIn } = useRealmApp();
     const setModal = useSetRecoilState(modalAtomFamily("login"));
     const [loginError, setLoginError] = useState(null);
 
@@ -434,8 +232,11 @@ function LoginForm({ setLoginState }) {
                 password: values["loginModal-password"],
             };
             let user = await logIn("email", emailpw);
-            if (!user) setLoginError("cannot log in");
-            setModal({ open: false });
+            if (!user) {
+                setLoginError("cannot log in");
+            } else {
+                setModal({ open: false });
+            }
         },
     });
 

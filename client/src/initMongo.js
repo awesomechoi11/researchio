@@ -2,8 +2,11 @@ import * as Realm from "realm-web";
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import { useSetRecoilState } from "recoil";
 import { modalAtomFamily } from "./components/atoms";
+import { useEffectOnceWhen } from "rooks";
 
 const RealmAppContext = React.createContext(null);
+
+console.log(Realm);
 
 export const RealmApp = ({ children }) => {
     const app = useMemo(() => new Realm.App({ id: "application-0-ieqsb" }), []);
@@ -24,7 +27,7 @@ export const RealmApp = ({ children }) => {
         }
         try {
             await app.logIn(credentials);
-
+            // await app.currentUser.refreshCustomData();
             setUser(app.currentUser);
 
             return app.currentUser;
@@ -43,6 +46,18 @@ export const RealmApp = ({ children }) => {
         }
     };
 
+    const refreshUserData = async () => {
+        if (!user) return;
+        if (user.providerType === "anon-user") return;
+        await user.refreshCustomData();
+    };
+
+    useEffectOnceWhen(() => {
+        if (!user) return;
+        if (user.providerType === "anon-user") return;
+        user.refreshCustomData();
+    }, user);
+
     return (
         <RealmAppContext.Provider
             value={{
@@ -50,6 +65,7 @@ export const RealmApp = ({ children }) => {
                 logOut,
                 RealmApp: app,
                 user,
+                refreshUserData,
             }}
         >
             {children}
@@ -74,6 +90,7 @@ export const MongoDB = ({ children }) => {
 
     const [db, setDb] = useState(null);
     const setModal = useSetRecoilState(modalAtomFamily("login"));
+
     const getUserOrOpenLoginModal = () => {
         if (!user) return;
         if (user.providerType === "anon-user") {
@@ -97,16 +114,22 @@ export const MongoDB = ({ children }) => {
         }
     }, [user]);
 
-    const updateProfile = (newDoc) => {
-        // needs non anon user and db
-        if (!user || user.providerType === "anon-user" || !db) return;
-        return db
-            .collection("users")
-            .updateOne(
-                { userId: user.id },
-                { $set: { ...newDoc, userId: user.id } },
-                { upsert: true }
-            );
+    const updateUserData = (
+        updateDoc,
+        query = { userId: user.id },
+        options = { upsert: true }
+    ) => {
+        // Update the user's custom data document
+        console.log(123, updateDoc, query, options);
+        return db.collection("users").updateOne(
+            query, // Query for the user object of the logged in user
+            {
+                $set: { userId: user.id },
+                $currentDate: { lastModified: true },
+                ...updateDoc,
+            }, // Set the logged in user's favorite color to purple
+            options
+        );
     };
 
     return (
@@ -114,7 +137,7 @@ export const MongoDB = ({ children }) => {
             value={{
                 db,
                 user,
-                updateProfile,
+                updateUserData,
                 getUserOrOpenLoginModal,
             }}
         >

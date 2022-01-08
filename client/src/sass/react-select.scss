@@ -1,0 +1,50 @@
+.select-wrapper {
+    position: relative;
+    margin: 6rem 0 1rem 0;
+
+    > label {
+        pointer-events: none;
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        opacity: 1;
+        color: variables.$color-secondary-light;
+        font-size: variables.$font-size-normal;
+        transition: color 220ms, font-size 220ms, top 220ms;
+        user-select: none;
+    }
+
+    > .react-select-container {
+        margin: 0 0 3rem 0;
+
+        &.has-error .react-select__control {
+            border-radius: 1rem;
+            border: solid variables.$color-error 0.25rem;
+        }
+
+        & + label {
+            color: variables.$color-secondary-lightest;
+            font-size: variables.$font-size-small;
+            top: -4rem;
+        }
+        > .react-select__control {
+            box-shadow: none;
+            background-color: variables.$color-white;
+            border-color: variables.$color-primary-lightest;
+            &:hover {
+                border-color: variables.$color-primary;
+            }
+
+            //     > .react-select__value-container {
+            //     }
+            //     > .react-select__indicators {
+            //     }
+            // }
+            // > .react-select__menu {
+            //     > .react-select__menu-list {
+            //         > .react-select__option {
+            //         }
+            //     }
+        }
+    }
+}

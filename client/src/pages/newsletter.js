@@ -117,7 +117,7 @@ function NewsletterForm() {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="select-wrapper">
                 <Select
                     options={options}
                     id="newsletter-role"
@@ -134,6 +134,7 @@ function NewsletterForm() {
                     error={formik.errors.state}
                     touched={formik.touched.state}
                 />
+                <label htmlFor="newsletter-role">role</label>
                 {hasError("newsletter-role") ? (
                     <div className="error">
                         {formik.errors["newsletter-role"]}
