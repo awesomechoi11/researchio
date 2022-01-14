@@ -412,11 +412,13 @@ export default function CreateListingOpening() {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: undefined,
+                                            settings: undefined,
                                         });
                                     } else {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: itemData,
+                                            settings: undefined,
                                         });
                                     }
                                 },

@@ -46,11 +46,11 @@ export default function CreateListingFinalize() {
             <div className="fw-bold fs-big finalize-title">Project</div>
             <div className="item-wrapper">
                 <DashboardGridBlockItem
-                    handleOptions={{
-                        onEdit: async () => {
-                            // scroll up
-                        },
-                    }}
+                // handleOptions={{
+                //     onEdit: async () => {
+                //         // scroll up
+                //     },
+                // }}
                 >
                     <div>
                         <div className="fs-big fw-bold">
@@ -66,11 +66,11 @@ export default function CreateListingFinalize() {
             <div className="fw-bold fs-big finalize-title">Opening</div>
             <div className="item-wrapper">
                 <DashboardGridBlockItem
-                    handleOptions={{
-                        onEdit: async () => {
-                            // scroll
-                        },
-                    }}
+                // handleOptions={{
+                //     onEdit: async () => {
+                //         // scroll
+                //     },
+                // }}
                 >
                     <div className="item-inner-wrapper">
                         <OpeningDetailTable
@@ -136,11 +136,11 @@ export default function CreateListingFinalize() {
                     questionsArr.map((itemData, index) => (
                         <DashboardGridBlockItem
                             key={index}
-                            handleOptions={{
-                                onEdit: async () => {
-                                    // scroll
-                                },
-                            }}
+                            // handleOptions={{
+                            //     onEdit: async () => {
+                            //         // scroll
+                            //     },
+                            // }}
                         >
                             <div className="item-inner-wrapper">
                                 <div className="description">

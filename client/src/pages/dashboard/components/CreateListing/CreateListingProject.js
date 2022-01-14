@@ -107,7 +107,7 @@ export default function CreateListingProject() {
                 "dashboard-newproject-title": Yup.string().required("Required"),
                 "dashboard-newproject-description":
                     Yup.string().required("Required"),
-                "dashboard-newproject-website": Yup.string(),
+                "dashboard-newproject-website": Yup.string().url().required(),
             }),
         []
     );
