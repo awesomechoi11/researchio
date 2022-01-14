@@ -202,22 +202,33 @@ function PublishForm() {
             Object.values(listingProjectData).forEach((val) => {
                 data = { ...data, ...val };
             });
-            await db.collection("listings").updateOne(
-                {
-                    userId: user.id,
-                    recruiter,
-                    listingId,
-                },
-                {
-                    $currentDate: { lastModified: true },
-                    $set: {
-                        ...data,
+
+            await Promise.all([
+                await db.collection("listings").updateOne(
+                    {
                         userId: user.id,
+                        recruiter,
                         listingId,
                     },
-                },
-                { upsert: true }
-            );
+                    {
+                        $currentDate: { lastModified: true },
+                        $set: {
+                            ...data,
+                            userId: user.id,
+                            listingId,
+                        },
+                    },
+                    { upsert: true }
+                ),
+                await db.collection("listings").updateOne(
+                    { userId: user.id },
+                    {
+                        $set: {
+                            has_completed_opening: new Date(),
+                        },
+                    }
+                ),
+            ]);
             // console.log({
             //     ...data,
             //     userId: user.id,

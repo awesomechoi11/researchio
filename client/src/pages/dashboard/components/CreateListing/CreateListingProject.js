@@ -37,14 +37,25 @@ export default function CreateListingProject() {
                         (newValues[fieldname] = values[idPrefix + fieldname])
                 );
                 if (mode.label === "add") {
-                    await updateUserData({
-                        $addToSet: {
-                            projects: {
-                                ...newValues,
-                                id: new Realm.BSON.ObjectID(),
+                    await Promise.all([
+                        await updateUserData({
+                            $addToSet: {
+                                projects: {
+                                    ...newValues,
+                                    id: new Realm.BSON.ObjectID(),
+                                },
                             },
-                        },
-                    });
+                        }),
+                        await updateUserData(
+                            {
+                                $set: {
+                                    has_completed_project: new Date(),
+                                },
+                            },
+                            { userId: user.id },
+                            {}
+                        ),
+                    ]);
                 } else if (mode.label === "edit") {
                     await updateUserData(
                         {

@@ -132,22 +132,36 @@ export default function CreateListingOpening() {
                 }
 
                 if (mode.label === "add") {
-                    await db.collection("users").updateOne(
-                        {
-                            userId: user.id,
-                            "projects.id": projectData.id,
-                        }, // Query for the user object of the logged in user
-                        {
-                            // $set: { userId: user.id },
-                            $currentDate: { lastModified: true },
-                            $addToSet: {
-                                "projects.$.openings": {
-                                    ...newValues,
-                                    id: new Realm.BSON.ObjectID(),
+                    await Promise.all([
+                        await db.collection("users").updateOne(
+                            {
+                                userId: user.id,
+                                "projects.id": projectData.id,
+                            }, // Query for the user object of the logged in user
+                            {
+                                // $set: { userId: user.id },
+                                $currentDate: { lastModified: true },
+                                $addToSet: {
+                                    "projects.$.openings": {
+                                        ...newValues,
+                                        id: new Realm.BSON.ObjectID(),
+                                    },
+                                },
+                                $set: {
+                                    has_completed_project: new Date(),
+                                },
+                            } // Set the logged in user's favorite color to purple
+                        ),
+                        await updateUserData(
+                            {
+                                $set: {
+                                    has_completed_opening: new Date(),
                                 },
                             },
-                        } // Set the logged in user's favorite color to purple
-                    );
+                            { userId: user.id },
+                            {}
+                        ),
+                    ]);
                 } else if (mode.label === "edit") {
                     await user.functions.updateOne(
                         "users",
