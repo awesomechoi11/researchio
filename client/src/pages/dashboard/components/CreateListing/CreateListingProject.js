@@ -56,6 +56,22 @@ export default function CreateListingProject() {
                             {}
                         ),
                     ]);
+                    if (
+                        !(
+                            user &&
+                            user.customData &&
+                            user.customData.has_completed_project
+                        )
+                    )
+                        await updateUserData(
+                            {
+                                $set: {
+                                    has_completed_project: new Date(),
+                                },
+                            },
+                            { userId: user.id },
+                            {}
+                        );
                 } else if (mode.label === "edit") {
                     await updateUserData(
                         {

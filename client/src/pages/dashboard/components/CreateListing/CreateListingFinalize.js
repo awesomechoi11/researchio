@@ -203,32 +203,38 @@ function PublishForm() {
                 data = { ...data, ...val };
             });
 
-            await Promise.all([
-                await db.collection("listings").updateOne(
-                    {
+            await db.collection("listings").updateOne(
+                {
+                    userId: user.id,
+                    recruiter,
+                    listingId,
+                },
+                {
+                    $currentDate: { lastModified: true },
+                    $set: {
+                        ...data,
                         userId: user.id,
-                        recruiter,
                         listingId,
                     },
-                    {
-                        $currentDate: { lastModified: true },
-                        $set: {
-                            ...data,
-                            userId: user.id,
-                            listingId,
-                        },
-                    },
-                    { upsert: true }
-                ),
-                await db.collection("listings").updateOne(
+                },
+                { upsert: true }
+            );
+
+            if (
+                !(
+                    user &&
+                    user.customData &&
+                    user.customData.has_completed_publish
+                )
+            )
+                await await db.collection("users").updateOne(
                     { userId: user.id },
                     {
                         $set: {
-                            has_completed_opening: new Date(),
+                            has_completed_publish: new Date(),
                         },
                     }
-                ),
-            ]);
+                );
             // console.log({
             //     ...data,
             //     userId: user.id,

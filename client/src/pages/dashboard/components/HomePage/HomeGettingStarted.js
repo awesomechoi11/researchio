@@ -1,8 +1,11 @@
 import { useMemo } from "react";
 import { useMongoDB } from "../../../../initMongo";
 import DashboardGridBlock from "../DashboardGridBlock";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeGettingStarted() {
+    let navigate = useNavigate();
+
     return (
         <DashboardGridBlock
             width={5}
@@ -28,7 +31,13 @@ export default function HomeGettingStarted() {
                     You can follow a guided process by clicking this button or
                     the button on the upper left corner
                 </div>
-                <button>Create Listing</button>
+                <button
+                    onClick={() => {
+                        navigate("/dashboard/create-listing");
+                    }}
+                >
+                    Create Listing
+                </button>
             </div>
         </DashboardGridBlock>
     );
@@ -41,11 +50,7 @@ function IntroList() {
 
     return (
         <div className="list-item-wrapper">
-            <ListItem
-                // completed={data.has_completed_project}
-                completed={true}
-                index="1"
-            >
+            <ListItem completed={data.has_completed_project} index="1">
                 Create a <b>Project</b>
             </ListItem>
             <ListItem completed={data.has_completed_opening} index="2">
