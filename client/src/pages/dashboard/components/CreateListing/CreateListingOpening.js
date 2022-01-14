@@ -16,17 +16,19 @@ import {
 import { useRealmApp, useMongoDB } from "../../../../initMongo";
 import DashboardGridBlockItem from "../DashboardGridBlockItem";
 import DashboardGridBlock from "../DashboardGridBlock";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import fastEqual from "fast-deep-equal";
 import arrayOfMajors from "./listOfMajors";
 import arrayOfTechnicalSkills from "./arrayOfTechnicalSkills";
-import { string } from "yup/lib/locale";
 import clsx from "clsx";
 import { useTable } from "react-table";
 
 function mongoToDate(obj) {
-    return new Date(Number(obj.$date.$numberLong));
+    if (obj && "$date" in obj && "$numberLong" in obj.$date) {
+        return new Date(Number(obj.$date.$numberLong));
+    }
+    return "";
 }
 
 function DetailTable({ itemData }) {
@@ -68,7 +70,7 @@ function DetailTable({ itemData }) {
         ],
         []
     );
-    console.log(data);
+    // console.log(data);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({
             columns,
@@ -115,8 +117,6 @@ export default function CreateListingOpening() {
     const [listingProjectData, setListingProjectData] = useRecoilState(
         createListingProjectAtom
     );
-    const resetProjectAtom = useResetRecoilState(createListingProjectAtom);
-
     const projectData = user.customData.projects.find(
         (proj) => proj.id.$oid === listingProjectData.project.id.$oid
     );
@@ -149,7 +149,9 @@ export default function CreateListingOpening() {
                         } // Set the logged in user's favorite color to purple
                     );
                 } else if (mode.label === "edit") {
-                    await updateUserData(
+                    await user.functions.updateOne(
+                        "users",
+                        { userId: user.id },
                         {
                             $set: {
                                 "projects.$[project].openings.$[opening]": {
@@ -158,8 +160,8 @@ export default function CreateListingOpening() {
                                 },
                             },
                         },
-                        { userId: user.id },
                         {
+                            upsert: true,
                             arrayFilters: [
                                 {
                                     "project.id": projectData.id,
@@ -177,8 +179,9 @@ export default function CreateListingOpening() {
 
                 toast.success("Successfully Saved!");
                 resetForm();
-            } catch {
+            } catch (err) {
                 toast.error("Uh Oh! An error occured");
+                console.log(err);
             }
         },
         [mode]
@@ -192,7 +195,9 @@ export default function CreateListingOpening() {
                 "dashboard-opening-opportunityType": Yup.object({
                     value: Yup.string().required(),
                     label: Yup.string().required(),
-                }),
+                })
+                    .nullable()
+                    .required("Required"),
                 "dashboard-opening-remote": Yup.string().required("Required"),
                 "dashboard-opening-availability": Yup.string()
                     .required("Required")
@@ -225,7 +230,7 @@ export default function CreateListingOpening() {
     const formik = useFormik({
         initialValues: {
             "dashboard-opening-department": "",
-            "dashboard-opening-opportunityType": "",
+            "dashboard-opening-opportunityType": null,
             "dashboard-opening-remote": "",
             "dashboard-opening-availability": 1,
             "dashboard-opening-startend": null,
@@ -270,9 +275,14 @@ export default function CreateListingOpening() {
     );
 
     // console.log(formik.values);
-    console.log(listingProjectData);
     return (
         <DashboardGridBlock width={4} title="Select A Opening">
+            <div className="description">
+                <div className="body">
+                    <b>Select</b> or <b>Add</b> openings for an available
+                    position
+                </div>
+            </div>
             <div className="item-wrapper">
                 {dataArr.length ? (
                     dataArr.map((itemData, index) => (
@@ -331,7 +341,7 @@ export default function CreateListingOpening() {
                                             newValues[idPrefix + key] = value;
                                         }
                                     }
-                                    console.log(itemData, newValues);
+                                    // console.log(itemData, newValues);
                                     formik.setValues(newValues);
                                 },
                                 onDuplicate: async () => {
@@ -407,15 +417,20 @@ export default function CreateListingOpening() {
                                     <div className="label fc-light">
                                         majors considered
                                     </div>
-                                    <div className="body">
-                                        {itemData.majorsConsidered.map(
-                                            (major) => (
-                                                <span className="pill">
-                                                    {major.value}
-                                                </span>
-                                            )
-                                        )}
-                                    </div>
+                                    {itemData.majorsConsidered && (
+                                        <div className="body">
+                                            {itemData.majorsConsidered.map(
+                                                (major) => (
+                                                    <span
+                                                        className="pill"
+                                                        key={major.value}
+                                                    >
+                                                        {major.value}
+                                                    </span>
+                                                )
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                                 {itemData.desiredTechnicalSkills && (
                                     <div className="item-section">
@@ -425,7 +440,10 @@ export default function CreateListingOpening() {
                                         <div className="body">
                                             {itemData.desiredTechnicalSkills.map(
                                                 (item) => (
-                                                    <span className="pill">
+                                                    <span
+                                                        className="pill"
+                                                        key={item.value}
+                                                    >
                                                         {item.value}
                                                     </span>
                                                 )
@@ -455,7 +473,8 @@ export default function CreateListingOpening() {
                 </div>
             ) : (
                 <div>
-                    <div>Create A New Project</div>
+                    <div className="divider" />
+                    <div className="fw-bold fs-big">Create A New Opening</div>
                     <form onSubmit={formik.handleSubmit}>
                         <div className="form-group">
                             <FormikDropdown
