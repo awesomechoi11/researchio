@@ -20,7 +20,7 @@ export default function DashboardGridBlockItem({
                 {children}
             </div>
             <div className="controls">
-                {handleOptions && Object.keys(handleOptions).length && (
+                {handleOptions && !!Object.keys(handleOptions).length && (
                     <ItemOptions {...handleOptions} />
                 )}
             </div>
@@ -79,23 +79,47 @@ function ItemOptions({ onEdit, onDelete, onDuplicate, onView }) {
                 className="popup"
             >
                 {onEdit && (
-                    <div className="item" onClick={onEdit}>
+                    <div
+                        className="item"
+                        onClick={() => {
+                            onEdit();
+                            setOpen(false);
+                        }}
+                    >
                         <PencilSvg /> edit
                     </div>
                 )}
                 {onDuplicate && (
-                    <div className="item" onClick={onDuplicate}>
+                    <div
+                        className="item"
+                        onClick={() => {
+                            onDuplicate();
+                            setOpen(false);
+                        }}
+                    >
                         <CopySvg /> duplicate
                     </div>
                 )}
                 {onDelete && (
-                    <div className="item" onClick={onDelete}>
+                    <div
+                        className="item"
+                        onClick={() => {
+                            onDelete();
+                            setOpen(false);
+                        }}
+                    >
                         <TrashSvg /> delete
                     </div>
                 )}
 
                 {onView && (
-                    <div className="item" onClick={onView}>
+                    <div
+                        className="item"
+                        onClick={() => {
+                            onView();
+                            setOpen(false);
+                        }}
+                    >
                         <ViewSvg /> view
                     </div>
                 )}

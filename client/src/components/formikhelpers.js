@@ -218,6 +218,7 @@ export function FormikCreatableDropdown({
     dropdownProps,
     ...props
 }) {
+    console.log(formik);
     return (
         <div className="select-wrapper" {...props}>
             <CreatableSelect
@@ -236,7 +237,6 @@ export function FormikCreatableDropdown({
                 }}
                 error={formik.errors.state}
                 touched={formik.touched.state}
-                setValue={() => {}}
                 defaultValue={options.find(
                     (opt) => opt.value === formik.initialValues[id]
                 )}

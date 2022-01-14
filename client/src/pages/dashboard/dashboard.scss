@@ -50,7 +50,7 @@
 
 .dashboard-grid-block {
     border: solid variables.$color-primary-lightest 1px;
-    border-radius: 1rem;
+    border-radius: 4rem;
     box-sizing: border-box;
     overflow-y: auto;
     margin-bottom: 6rem;
@@ -64,6 +64,9 @@
         margin-top: 4rem;
         gap: 2rem;
     }
+    .finalize-title {
+        margin: 8rem 0 4rem 0;
+    }
     .item-wrapper {
         > .item {
             border-radius: 2rem;
@@ -71,12 +74,15 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 2rem;
+            overflow: hidden;
 
             &.selected {
                 border: 0.25rem solid variables.$color-primary;
+                border-left-width: thick;
             }
             > .content {
-                padding: 2rem;
+                padding: 4rem;
+                flex-grow: 1;
             }
             > .controls {
                 padding: 2rem;
@@ -105,6 +111,9 @@
         transition: background-color 220ms;
         &:hover {
             background-color: variables.$color-white-dark;
+        }
+        > .content {
+            flex-grow: 0 !important;
         }
     }
     .item-select-area {
@@ -145,9 +154,10 @@
 }
 
 .description {
-    // margin: 2rem;
+    margin: 2rem 0;
     > .label {
         margin-bottom: 2rem;
+        font-weight: 800;
     }
     > .body {
         padding: 2rem;
@@ -159,5 +169,6 @@
     // margin: 2rem;
     > .label {
         margin-bottom: 2rem;
+        font-weight: 800;
     }
 }

@@ -15,6 +15,7 @@ import "./sass/dropdowns.scss";
 import DashboardPage from "./pages/dashboard/dashboard";
 import DashboardNavbar from "./pages/dashboard/components/DashboardNavbar";
 import CreateListingPage from "./pages/dashboard/pages/createlisting";
+import DashboardHome from "./pages/dashboard/pages/dashboardhome";
 
 export default function Main() {
     const { user, logIn, RealmApp } = useRealmApp();
@@ -40,7 +41,7 @@ export default function Main() {
                             element={<CreateListingPage />}
                         />
                         <Route path=":pageId" element={<div>page</div>} />
-                        <Route index element={<div>home</div>} />
+                        <Route index element={<DashboardHome />} />
                     </Route>
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route
