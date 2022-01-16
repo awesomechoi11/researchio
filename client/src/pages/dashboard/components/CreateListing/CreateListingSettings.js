@@ -36,10 +36,10 @@ function NotificationsForm() {
     );
 
     const projectData = user.customData.projects.find(
-        (proj) => proj.id.$oid === listingProjectData.project.id.$oid
+        (proj) => proj.projectId === listingProjectData.project.projectId
     );
     const openingData = projectData.openings.find(
-        (opening) => opening.id.$oid === listingProjectData.opening.id.$oid
+        (opening) => opening.openingId === listingProjectData.opening.openingId
     );
 
     const [mode, setMode] = useState({ label: "default" });
@@ -83,9 +83,9 @@ function NotificationsForm() {
                 //         {
                 //             arrayFilters: [
                 //                 {
-                //                     "project.id": projectData.id,
+                //                     "project.projectId": projectData.id,
                 //                 },
-                //                 { "opening.id": mode.data.id },
+                //                 { "opening.openingId": mode.data.id },
                 //             ],
                 //         }
                 //     );
@@ -222,8 +222,8 @@ function NotificationsForm() {
                                 onClick: () => {
                                     const isSelected =
                                         listingProjectData.opening &&
-                                        listingProjectData.opening.id.$oid ===
-                                            itemData.id.$oid;
+                                        listingProjectData.opening.openingId ===
+                                            itemData.openingId;
                                     // fastEqual(
                                     //     listingProjectData.opening,
                                     //     itemData
@@ -318,24 +318,27 @@ function SettingsForm() {
         createListingProjectAtom
     );
 
-    const onSubmit = useCallback(async (values, { resetForm }) => {
-        try {
-            const idPrefix = "dashboard-settings-";
-            const newValues = {};
-            for (const [key, value] of Object.entries(values)) {
-                newValues[key.replace(idPrefix, "")] = value;
+    const onSubmit = useCallback(
+        async (values, { resetForm }) => {
+            try {
+                const idPrefix = "dashboard-settings-";
+                const newValues = {};
+                for (const [key, value] of Object.entries(values)) {
+                    newValues[key.replace(idPrefix, "")] = value;
+                }
+
+                setListingProjectData({
+                    ...listingProjectData,
+                    settings: newValues,
+                });
+
+                toast.success("Almost Done!");
+            } catch {
+                toast.error("Uh Oh! An error occured");
             }
-
-            setListingProjectData({
-                ...listingProjectData,
-                settings: newValues,
-            });
-
-            toast.success("Almost Done!");
-        } catch {
-            toast.error("Uh Oh! An error occured");
-        }
-    }, []);
+        },
+        [listingProjectData]
+    );
 
     const validationSchema = useMemo(
         () =>
@@ -380,7 +383,9 @@ function SettingsForm() {
         <div>
             <div className="description">
                 <div className="body">
-                    Just a <b>few</b> more details!
+                    Just a <b>few</b> more details! <br />
+                    (Leave <b>Listing Expire Date</b> as <b>today's date</b> if
+                    the listing should <b>never expire</b>.)
                 </div>
             </div>
             <form onSubmit={formik.handleSubmit}>

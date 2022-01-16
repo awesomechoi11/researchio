@@ -22,7 +22,7 @@ export default function DashboardGridBlock({
         <motion.div
             {...props}
             className={clsx("dashboard-grid-block", className)}
-            style={{ width: blockWidth, height: blockHeight, padding }}
+            style={{ width: blockWidth, minHeight: blockHeight, padding }}
         >
             <div className="title fs-bigger fw-bold">{title}</div>
             <div className="content-wrapper">{children}</div>

@@ -7,6 +7,7 @@ import { useMongoDB, useRealmApp } from "../../initMongo";
 import * as Realm from "realm-web";
 import toast from "react-hot-toast";
 import ProfileItem from "./ProfileItem";
+import { randomId } from "../../misc";
 
 export default function ReasearchExperienceCard() {
     const { refreshUserData } = useRealmApp();
@@ -35,7 +36,7 @@ export default function ReasearchExperienceCard() {
                     $addToSet: {
                         researchexperience: {
                             ...newValues,
-                            id: new Realm.BSON.ObjectID(),
+                            researchexperienceId: randomId(),
                         },
                     },
                 });
@@ -44,12 +45,17 @@ export default function ReasearchExperienceCard() {
                     {
                         $set: {
                             "researchexperience.$": {
-                                id: mode.data.id,
+                                researchexperienceId:
+                                    mode.data.researchexperienceId,
                                 ...newValues,
                             },
                         },
                     },
-                    { userId: user.id, "researchexperience.id": mode.data.id }
+                    {
+                        userId: user.id,
+                        "researchexperience.researchexperienceId":
+                            mode.data.researchexperienceId,
+                    }
                 );
                 setMode({
                     label: "add",
@@ -68,8 +74,10 @@ export default function ReasearchExperienceCard() {
     const validationSchema = useMemo(
         () =>
             Yup.object({
-                "profile-researchexperience-type":
-                    Yup.string().required("Required"),
+                "profile-researchexperience-type": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                }),
                 "profile-researchexperience-title":
                     Yup.string().required("Required"),
                 "profile-researchexperience-citation":
@@ -149,7 +157,8 @@ export default function ReasearchExperienceCard() {
                                                 $push: {
                                                     researchexperience: {
                                                         ...researchexperienceItemData,
-                                                        id: new Realm.BSON.ObjectId(),
+                                                        researchexperienceId:
+                                                            randomId(),
                                                     },
                                                 },
                                             });
@@ -169,7 +178,7 @@ export default function ReasearchExperienceCard() {
                                 }}
                             >
                                 <div>
-                                    {researchexperienceItemData.type} —{" "}
+                                    {researchexperienceItemData.type.value} —{" "}
                                     {researchexperienceItemData.title}
                                 </div>
                                 <div>{researchexperienceItemData.citation}</div>

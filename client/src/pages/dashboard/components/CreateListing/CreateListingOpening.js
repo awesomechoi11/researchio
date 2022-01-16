@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import * as Realm from "realm-web";
 import {
     FormikCreatableDropdown,
     FormikDatePicker,
@@ -23,6 +22,7 @@ import arrayOfMajors from "./listOfMajors";
 import arrayOfTechnicalSkills from "./arrayOfTechnicalSkills";
 import clsx from "clsx";
 import { useTable } from "react-table";
+import { randomId } from "../../../../misc";
 
 function mongoToDate(obj) {
     if (obj && "$date" in obj && "$numberLong" in obj.$date) {
@@ -118,7 +118,7 @@ export default function CreateListingOpening() {
         createListingProjectAtom
     );
     const projectData = user.customData.projects.find(
-        (proj) => proj.id.$oid === listingProjectData.project.id.$oid
+        (proj) => proj.projectId === listingProjectData.project.projectId
     );
 
     const onSubmit = useCallback(
@@ -135,7 +135,7 @@ export default function CreateListingOpening() {
                     await db.collection("users").updateOne(
                         {
                             userId: user.id,
-                            "projects.id": projectData.id,
+                            "projects.projectId": projectData.projectId,
                         }, // Query for the user object of the logged in user
                         {
                             // $set: { userId: user.id },
@@ -143,7 +143,7 @@ export default function CreateListingOpening() {
                             $addToSet: {
                                 "projects.$.openings": {
                                     ...newValues,
-                                    id: new Realm.BSON.ObjectID(),
+                                    openingId: randomId(),
                                 },
                             },
                             $set: {
@@ -174,7 +174,7 @@ export default function CreateListingOpening() {
                         {
                             $set: {
                                 "projects.$[project].openings.$[opening]": {
-                                    id: mode.data.id,
+                                    openingId: mode.data.openingId,
                                     ...newValues,
                                 },
                             },
@@ -183,9 +183,9 @@ export default function CreateListingOpening() {
                             upsert: true,
                             arrayFilters: [
                                 {
-                                    "project.id": projectData.id,
+                                    "project.projectId": projectData.projectId,
                                 },
-                                { "opening.id": mode.data.id },
+                                { "opening.openingId": mode.data.openingId },
                             ],
                         }
                     );
@@ -320,7 +320,8 @@ export default function CreateListingOpening() {
                                             },
                                             {
                                                 userId: user.id,
-                                                "projects.id": projectData.id,
+                                                "projects.projectId":
+                                                    projectData.projectId,
                                             }
                                         );
                                         await refreshUserData();
@@ -370,13 +371,14 @@ export default function CreateListingOpening() {
                                                 $push: {
                                                     "projects.$.openings": {
                                                         ...itemData,
-                                                        id: new Realm.BSON.ObjectId(),
+                                                        openingId: randomId(),
                                                     },
                                                 },
                                             },
                                             {
                                                 userId: user.id,
-                                                "projects.id": projectData.id,
+                                                "projects.projectId":
+                                                    projectData.projectId,
                                             }
                                         );
                                         await refreshUserData();
@@ -402,8 +404,8 @@ export default function CreateListingOpening() {
                                 onClick: () => {
                                     const isSelected =
                                         listingProjectData.opening &&
-                                        listingProjectData.opening.id.$oid ===
-                                            itemData.id.$oid;
+                                        listingProjectData.opening.openingId ===
+                                            itemData.openingId;
                                     // fastEqual(
                                     //     listingProjectData.opening,
                                     //     itemData
@@ -413,12 +415,14 @@ export default function CreateListingOpening() {
                                             ...listingProjectData,
                                             opening: undefined,
                                             settings: undefined,
+                                            questions: undefined,
                                         });
                                     } else {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: itemData,
                                             settings: undefined,
+                                            questions: undefined,
                                         });
                                     }
                                 },

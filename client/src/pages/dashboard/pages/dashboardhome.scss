@@ -52,3 +52,23 @@
         height: 100%;
     }
 }
+
+.feedback-block .content-wrapper {
+    > .top {
+        display: flex;
+        > .left {
+            width: 80rem;
+        }
+        > .right {
+            margin: 0 20rem;
+            > .art {
+                width: 35rem;
+                height: 35rem;
+                svg {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@ import { useMongoDB, useRealmApp } from "../../initMongo";
 import toast from "react-hot-toast";
 import ProfileItem from "./ProfileItem";
 import * as Realm from "realm-web";
+import { randomId } from "../../misc";
 
 export default function EducationCard() {
     const { refreshUserData } = useRealmApp();
@@ -35,7 +36,7 @@ export default function EducationCard() {
                     $addToSet: {
                         education: {
                             ...newValues,
-                            id: new Realm.BSON.ObjectID(),
+                            educationId: randomId(),
                         },
                     },
                 });
@@ -43,10 +44,16 @@ export default function EducationCard() {
                 await updateUserData(
                     {
                         $set: {
-                            "education.$": { id: mode.data.id, ...newValues },
+                            "education.$": {
+                                id: mode.data.educationId,
+                                ...newValues,
+                            },
                         },
                     },
-                    { userId: user.id, "education.id": mode.data.id }
+                    {
+                        userId: user.id,
+                        "education.educationId": mode.data.educationId,
+                    }
                 );
                 setMode({
                     label: "add",
@@ -144,7 +151,7 @@ export default function EducationCard() {
                                             $push: {
                                                 education: {
                                                     ...educationItemData,
-                                                    id: new Realm.BSON.ObjectId(),
+                                                    id: randomId(),
                                                 },
                                             },
                                         });

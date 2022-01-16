@@ -16,6 +16,7 @@ import { useRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import clsx from "clsx";
 import { useTable } from "react-table";
+import { randomId } from "../../../../misc";
 
 export default function CreateListingQuestions() {
     const { refreshUserData } = useRealmApp();
@@ -28,10 +29,10 @@ export default function CreateListingQuestions() {
     // const resetProjectAtom = useResetRecoilState(createListingProjectAtom);
 
     const projectData = user.customData.projects.find(
-        (proj) => proj.id.$oid === listingProjectData.project.id.$oid
+        (proj) => proj.projectId === listingProjectData.project.projectId
     );
     const openingData = projectData.openings.find(
-        (opening) => opening.id.$oid === listingProjectData.opening.id.$oid
+        (opening) => opening.openingId === listingProjectData.opening.openingId
     );
 
     const idPrefix = "dashboard-questions-";
@@ -54,15 +55,15 @@ export default function CreateListingQuestions() {
                                 "projects.$[project].openings.$[opening].questions":
                                     {
                                         ...newValues,
-                                        id: new Realm.BSON.ObjectID(),
+                                        questionId: randomId(),
                                     },
                             },
                         },
                         {
                             upsert: true,
                             arrayFilters: [
-                                { "project.id": projectData.id },
-                                { "opening.id": openingData.id },
+                                { "project.projectId": projectData.projectId },
+                                { "opening.openingId": openingData.openingId },
                             ],
                         }
                     );
@@ -74,7 +75,7 @@ export default function CreateListingQuestions() {
                             $set: {
                                 "projects.$[project].openings.$[opening].questions.$[question]":
                                     {
-                                        id: mode.data.id,
+                                        questionId: mode.data.questionId,
                                         ...newValues,
                                     },
                             },
@@ -82,9 +83,9 @@ export default function CreateListingQuestions() {
                         {
                             upsert: true,
                             arrayFilters: [
-                                { "project.id": projectData.id },
-                                { "opening.id": openingData.id },
-                                { "question.id": mode.data.id },
+                                { "project.projectId": projectData.projectId },
+                                { "opening.openingId": openingData.openingId },
+                                { "question.questionId": mode.data.questionId },
                             ],
                         }
                     );
@@ -143,7 +144,7 @@ export default function CreateListingQuestions() {
         { value: "optional", label: "Optional" },
     ];
 
-    console.log(listingProjectData.questions);
+    // console.log(listingProjectData.questions);
 
     return (
         <DashboardGridBlock width={4} title="Pre-Screening Questions">
@@ -175,12 +176,12 @@ export default function CreateListingQuestions() {
                                                 upsert: true,
                                                 arrayFilters: [
                                                     {
-                                                        "project.id":
-                                                            projectData.id,
+                                                        "project.projectId":
+                                                            projectData.projectId,
                                                     },
                                                     {
-                                                        "opening.id":
-                                                            openingData.id,
+                                                        "opening.openingId":
+                                                            openingData.openingId,
                                                     },
                                                 ],
                                             }
@@ -223,7 +224,8 @@ export default function CreateListingQuestions() {
                                                     "projects.$[project].openings.$[opening].questions":
                                                         {
                                                             ...itemData,
-                                                            id: new Realm.BSON.ObjectId(),
+                                                            questionId:
+                                                                randomId(),
                                                         },
                                                 },
                                             },
@@ -231,12 +233,12 @@ export default function CreateListingQuestions() {
                                                 upsert: true,
                                                 arrayFilters: [
                                                     {
-                                                        "project.id":
-                                                            projectData.id,
+                                                        "project.projectId":
+                                                            projectData.projectId,
                                                     },
                                                     {
-                                                        "opening.id":
-                                                            openingData.id,
+                                                        "opening.openingId":
+                                                            openingData.openingId,
                                                     },
                                                 ],
                                             }
@@ -256,7 +258,7 @@ export default function CreateListingQuestions() {
                             className={clsx(
                                 listingProjectData.questions &&
                                     listingProjectData.questions.has(
-                                        itemData.id.$oid
+                                        itemData.questionId
                                     ) &&
                                     "selected"
                             )}
@@ -268,15 +270,15 @@ export default function CreateListingQuestions() {
                                         new Set();
                                     const isSelected =
                                         currSet &&
-                                        currSet.has(itemData.id.$oid);
+                                        currSet.has(itemData.questionId);
                                     if (isSelected) {
-                                        currSet.delete(itemData.id.$oid);
+                                        currSet.delete(itemData.questionId);
                                         setListingProjectData({
                                             ...listingProjectData,
                                             questions: currSet,
                                         });
                                     } else {
-                                        currSet.add(itemData.id.$oid);
+                                        currSet.add(itemData.questionId);
                                         setListingProjectData({
                                             ...listingProjectData,
                                             questions: currSet,

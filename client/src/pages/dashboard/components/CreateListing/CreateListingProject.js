@@ -14,10 +14,11 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import clsx from "clsx";
 import fastEqual from "fast-deep-equal";
+import { randomId } from "../../../../misc";
 
 export default function CreateListingProject() {
     const { refreshUserData } = useRealmApp();
-    const { updateUserData, user } = useMongoDB();
+    const { updateUserData, user, db } = useMongoDB();
     const [flip, setFlip] = useState(true);
     const [mode, setMode] = useState({ label: "default" });
 
@@ -42,7 +43,7 @@ export default function CreateListingProject() {
                             $addToSet: {
                                 projects: {
                                     ...newValues,
-                                    id: new Realm.BSON.ObjectID(),
+                                    projectId: randomId(),
                                 },
                             },
                         }),
@@ -77,13 +78,19 @@ export default function CreateListingProject() {
                         {
                             $set: {
                                 "projects.$": {
-                                    id: mode.data.id,
+                                    projectId: mode.data.projectId,
                                     ...newValues,
                                 },
                             },
                         },
-                        { userId: user.id, "projects.id": mode.data.id }
+                        {
+                            userId: user.id,
+                            "projects.projectId": mode.data.projectId,
+                        }
                     );
+
+                    db.collection("listings").updateMany();
+
                     setMode({
                         label: "default",
                     });
@@ -172,7 +179,7 @@ export default function CreateListingProject() {
                                             $push: {
                                                 projects: {
                                                     ...itemData,
-                                                    id: new Realm.BSON.ObjectId(),
+                                                    projectId: randomId(),
                                                 },
                                             },
                                         });
@@ -199,8 +206,8 @@ export default function CreateListingProject() {
                                 onClick: () => {
                                     const isSelected =
                                         listingProjectData.project &&
-                                        listingProjectData.project.id.$oid ===
-                                            itemData.id.$oid;
+                                        listingProjectData.project.projectId ===
+                                            itemData.projectId;
                                     // fastEqual(
                                     //     listingProjectData.project,
                                     //     itemData

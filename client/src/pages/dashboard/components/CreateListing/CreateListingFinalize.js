@@ -1,37 +1,29 @@
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 import * as Realm from "realm-web";
-import {
-    FormikDropdown,
-    FormikInput,
-    FormikInputNumber,
-    FormikRadioGroup,
-} from "../../../../components/formikhelpers";
-import { useRealmApp, useMongoDB } from "../../../../initMongo";
+import { useMongoDB } from "../../../../initMongo";
 import DashboardGridBlockItem from "../DashboardGridBlockItem";
 import DashboardGridBlock from "../DashboardGridBlock";
 import { useRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import { useTable } from "react-table";
+import { randomId } from "../../../../misc";
 
 export default function CreateListingFinalize() {
     const [listingProjectData, setListingProjectData] = useRecoilState(
         createListingProjectAtom
     );
-
-    console.log(listingProjectData);
     const { user } = useMongoDB();
+
     const projectData = user.customData.projects.find(
-        (proj) => proj.id.$oid === listingProjectData.project.id.$oid
+        (proj) => proj.projectId === listingProjectData.project.projectId
     );
     const openingData = projectData.openings.find(
-        (opening) => opening.id.$oid === listingProjectData.opening.id.$oid
+        (opening) => opening.openingId === listingProjectData.opening.openingId
     );
     const questionsArr = listingProjectData.questions
         ? openingData.questions.filter((question) =>
-              listingProjectData.questions.has(question.id.$oid)
+              listingProjectData.questions.has(question.questionId)
           )
         : [];
 
@@ -191,12 +183,12 @@ function PublishForm() {
 
         try {
             console.log(listingProjectData);
-            let listingId = new Realm.BSON.ObjectID();
+            let listingId = randomId();
             let recruiter = {
-                general: user.general,
-                education: user.education,
-                contact: user.contact,
-                researchexperience: user.researchexperience,
+                general: user.customData.general,
+                education: user.customData.education,
+                contact: user.customData.contact,
+                researchexperience: user.customData.researchexperience,
             };
             let data = {};
             Object.values(listingProjectData).forEach((val) => {
@@ -268,7 +260,7 @@ function SettingsDetailTable({ itemData }) {
     const columns = useMemo(
         () => [
             {
-                Header: "Listing Visibility Date",
+                Header: "Listing Visibility",
                 accessor: "visibility",
             },
             {
@@ -290,7 +282,7 @@ function SettingsDetailTable({ itemData }) {
                 expireDate: itemData.expireDate.toDateString(),
             },
         ],
-        []
+        [itemData]
     );
     // console.log(data);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -368,7 +360,7 @@ function OpeningDetailTable({ itemData }) {
                 startDate: mongoToDate(itemData.startend[0]).toDateString(),
             },
         ],
-        []
+        [itemData]
     );
     // console.log(data);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -435,7 +427,7 @@ function QuestionsDetailTable({ itemData }) {
                 type: itemData.type.label,
             },
         ],
-        []
+        [itemData]
     );
     // console.log(data);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =

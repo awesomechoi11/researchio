@@ -35,7 +35,10 @@ export default function GeneralCard() {
                 "profile-general-lastName": Yup.string().required("Required"),
                 "profile-general-nickname": Yup.string(),
                 "profile-general-pronouns": Yup.string(),
-                "profile-general-role": Yup.string().required("Required"),
+                "profile-general-role": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                }),
             }),
         []
     );

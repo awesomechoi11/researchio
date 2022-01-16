@@ -16,6 +16,7 @@ import DashboardPage from "./pages/dashboard/dashboard";
 import DashboardNavbar from "./pages/dashboard/components/DashboardNavbar";
 import CreateListingPage from "./pages/dashboard/pages/createlisting";
 import DashboardHome from "./pages/dashboard/pages/dashboardhome";
+import MyListingsPage from "./pages/dashboard/pages/mylistings";
 
 export default function Main() {
     const { user, logIn, RealmApp } = useRealmApp();
@@ -40,9 +41,11 @@ export default function Main() {
                             path="create-listing"
                             element={<CreateListingPage />}
                         />
+                        <Route path="mylistings" element={<MyListingsPage />} />
                         <Route path=":pageId" element={<div>page</div>} />
                         <Route index element={<DashboardHome />} />
                     </Route>
+
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route
                         path="/confirm-email"
@@ -60,11 +63,6 @@ export default function Main() {
                     <Route path="/" element={<HomePage />} />
                 </Routes>
                 <Routes>
-                    <Route path="/dashboard" element={<DashboardNavbar />} />
-                    <Route
-                        path="/dashboard/:pageId"
-                        element={<DashboardNavbar />}
-                    />
                     <Route path="/*" element={<Navbar />} />
                 </Routes>
             </div>
