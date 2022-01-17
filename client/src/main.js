@@ -17,6 +17,7 @@ import DashboardNavbar from "./pages/dashboard/components/DashboardNavbar";
 import CreateListingPage from "./pages/dashboard/pages/createlisting";
 import DashboardHome from "./pages/dashboard/pages/dashboardhome";
 import MyListingsPage from "./pages/dashboard/pages/mylistings";
+import MyListingsViewPage from "./pages/dashboard/pages/mylistingsview";
 
 export default function Main() {
     const { user, logIn, RealmApp } = useRealmApp();
@@ -42,6 +43,10 @@ export default function Main() {
                             element={<CreateListingPage />}
                         />
                         <Route path="mylistings" element={<MyListingsPage />} />
+                        <Route
+                            path="mylistings/:listingId"
+                            element={<MyListingsViewPage />}
+                        />
                         <Route path=":pageId" element={<div>page</div>} />
                         <Route index element={<DashboardHome />} />
                     </Route>
@@ -63,7 +68,15 @@ export default function Main() {
                     <Route path="/" element={<HomePage />} />
                 </Routes>
                 <Routes>
-                    <Route path="/*" element={<Navbar />} />
+                    <Route path="/" element={<Navbar />} />
+                    <Route path="/newsletter" element={<Navbar />} />
+                    <Route path="/opportunities" element={<Navbar />} />
+                    <Route
+                        path="/principal-investigator"
+                        element={<Navbar />}
+                    />
+                    <Route path="/profile" element={<Navbar />} />
+                    {/* <Route path="/" element={<Navbar />} /> */}
                 </Routes>
             </div>
             {/* manually select what layer a modal belongs */}

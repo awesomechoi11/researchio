@@ -269,7 +269,7 @@ export function FormikInputNumber({ id, label, formik, className, ...props }) {
                 onChange={onChange}
                 onBlur={() => formik.setFieldTouched(id, true)}
                 value={value}
-                defaultValue={formik.initialValues[id]}
+                // defaultValue={formik.initialValues[id]}
                 //   style={{ width: 100 }}
                 //   readOnly={this.state.readOnly}
                 //   upHandler={upHandler}

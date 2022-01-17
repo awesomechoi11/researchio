@@ -35,7 +35,7 @@ export default function MyListingsPage() {
     }, [db]);
 
     return (
-        <div id="create-listing-page" className="dashboard-page">
+        <div id="mylistings-page" className="dashboard-page">
             <div className="page-title fs-jumbo fw-bold">My Listings</div>
             {data &&
                 data.map((rowArr, index) => (
@@ -74,10 +74,10 @@ export default function MyListingsPage() {
                                             </div>
                                         </div>
                                         <OpeningDetailTable
-                                            itemData={itemData}
+                                            itemData={itemData.opening}
                                         />
                                         <SettingsDetailTable
-                                            itemData={itemData}
+                                            itemData={itemData.settings}
                                         />
                                     </DashboardGridBlockItem>
                                 </div>
@@ -191,73 +191,6 @@ function OpeningDetailTable({ itemData }) {
                 opportunityType: itemData.opportunityType.label,
                 department: itemData.department,
                 startDate: itemData.startend[0].toDateString(),
-            },
-        ],
-        []
-    );
-    // console.log(data);
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({
-            columns,
-            data,
-        });
-    return (
-        <table {...getTableProps()}>
-            <thead>
-                {headerGroups.map((group) => (
-                    <tr {...group.getHeaderGroupProps()}>
-                        {group.headers.map((column) => (
-                            <th {...column.getHeaderProps()}>
-                                {column.render("Header")}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-                {rows.map((row, i) => {
-                    prepareRow(row);
-                    return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map((cell) => {
-                                return (
-                                    <td {...cell.getCellProps()}>
-                                        {cell.render("Cell")}
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
-    );
-}
-
-function QuestionsDetailTable({ itemData }) {
-    const columns = useMemo(
-        () => [
-            {
-                Header: "Question Type",
-                accessor: "type",
-            },
-            {
-                Header: "Max Word Count",
-                accessor: "maxCount",
-            },
-            {
-                Header: "Answer Required For Submission",
-                accessor: "required",
-            },
-        ],
-        []
-    );
-    const data = useMemo(
-        () => [
-            {
-                required: itemData.required,
-                maxCount: itemData.maxCount,
-                type: itemData.type.label,
             },
         ],
         []
