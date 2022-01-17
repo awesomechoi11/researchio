@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import { useTable } from "react-table";
 import { randomId } from "../../../../misc";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateListingFinalize() {
     const [listingProjectData, setListingProjectData] = useRecoilState(
@@ -172,6 +173,7 @@ export default function CreateListingFinalize() {
 }
 
 function PublishForm() {
+    const navigate = useNavigate();
     const [listingProjectData, setListingProjectData] = useRecoilState(
         createListingProjectAtom
     );
@@ -244,6 +246,7 @@ function PublishForm() {
             //     listingId,
             // });
             toast.success("Successfully Published!");
+            navigate("/dashboard/mylistings/veshVgSxqLHaTTXf");
         } catch {
             toast.error("Uh Oh! An error occured");
         }

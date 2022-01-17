@@ -67,10 +67,10 @@ export default function MyListingsPage() {
                                     >
                                         <div className="description">
                                             <div className="label">
-                                                description
+                                                opening description
                                             </div>
                                             <div className="body">
-                                                {itemData.description}
+                                                {itemData.opening.description}
                                             </div>
                                         </div>
                                         <OpeningDetailTable

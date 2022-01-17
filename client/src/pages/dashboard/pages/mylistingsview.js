@@ -63,13 +63,7 @@ export default function MyListingsViewPage() {
                 {/* opening */}
                 <div className="fw-bold fs-big finalize-title">Opening</div>
                 <div className="item-wrapper">
-                    <DashboardGridBlockItem
-                    // handleOptions={{
-                    //     onEdit: async () => {
-                    //         // scroll
-                    //     },
-                    // }}
-                    >
+                    <DashboardGridBlockItem>
                         <div className="item-inner-wrapper">
                             <OpeningDetailTable itemData={data.opening} />
                             <div className="description">
