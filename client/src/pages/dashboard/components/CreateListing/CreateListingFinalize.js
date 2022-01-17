@@ -238,7 +238,7 @@ function PublishForm() {
                 );
 
             toast.success("Successfully Published!");
-            navigate("/dashboard/mylistings/veshVgSxqLHaTTXf");
+            navigate(`/dashboard/mylistings/${listingId}`);
         } catch {
             toast.error("Uh Oh! An error occured");
         }
