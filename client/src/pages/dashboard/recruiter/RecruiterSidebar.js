@@ -25,7 +25,7 @@ export default function RecruiterSidebar() {
                 label="My Listings"
                 to="mylistings"
             />
-            <DashboardSidebarButton
+            {/* <DashboardSidebarButton
                 Iconsvg={TeamSvg}
                 label="Teams"
                 to="teams"
@@ -35,7 +35,7 @@ export default function RecruiterSidebar() {
                 Iconsvg={CandidatesSvg}
                 label="Candidates"
                 to="candidates"
-            />
+            /> */}
         </div>
     );
 }

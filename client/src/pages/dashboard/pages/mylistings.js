@@ -68,8 +68,8 @@ export default function MyListingsPage() {
                                                     });
                                                 await fetchSetListings();
                                             },
-                                            onEdit: async () => {},
-                                            onDuplicate: async () => {},
+                                            // onEdit: async () => {},
+                                            // onDuplicate: async () => {},
                                         }}
                                         contentProps={{
                                             className:
