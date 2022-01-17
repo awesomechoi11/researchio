@@ -428,14 +428,14 @@ export default function CreateListingOpening() {
                                             ...listingProjectData,
                                             opening: undefined,
                                             settings: undefined,
-                                            questions: new Set(),
+                                            questions: undefined,
                                         });
                                     } else {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: itemData,
                                             settings: undefined,
-                                            questions: new Set(),
+                                            questions: undefined,
                                         });
                                     }
                                 },

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTable } from "react-table";
 import { useMongoDB } from "../../../initMongo";
@@ -12,10 +12,11 @@ export default function MyListingsPage() {
     let navigate = useNavigate();
     const rowCount = 2;
     //get listings and divide into 4s
-    useEffect(() => {
-        if (!db) return;
 
-        db.collection("listings")
+    const fetchSetListings = useCallback(() => {
+        if (!db) return undefined;
+        return db
+            .collection("listings")
             .find({ userId: user.id })
             .then((data) => {
                 let main = [];
@@ -34,6 +35,14 @@ export default function MyListingsPage() {
             });
     }, [db]);
 
+    useEffect(() => {
+        if (!db) return;
+
+        fetchSetListings();
+    }, [db]);
+
+    if (!db) return <div>loading</div>;
+
     return (
         <div id="mylistings-page" className="dashboard-page">
             <div className="page-title fs-jumbo fw-bold">My Listings</div>
@@ -51,7 +60,14 @@ export default function MyListingsPage() {
                                 <div className="item-wrapper">
                                     <DashboardGridBlockItem
                                         handleOptions={{
-                                            onDelete: async () => {},
+                                            onDelete: async () => {
+                                                await db
+                                                    .collection("listings")
+                                                    .deleteOne({
+                                                        _id: itemData._id,
+                                                    });
+                                                await fetchSetListings();
+                                            },
                                             onEdit: async () => {},
                                             onDuplicate: async () => {},
                                         }}

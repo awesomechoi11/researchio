@@ -201,15 +201,10 @@ function PublishForm() {
                 contact: user.customData.contact,
                 researchexperience: user.customData.researchexperience,
             };
-            // let data = {};
-            // Object.values(listingProjectData).forEach((val) => {
-            //     data = { ...data, ...val };
-            // });
 
             await db.collection("listings").updateOne(
                 {
                     userId: user.id,
-                    recruiter,
                     listingId,
                 },
                 {
@@ -217,6 +212,7 @@ function PublishForm() {
                     $set: {
                         ...listingProjectData,
                         ...listingProjectData.project,
+                        recruiter,
                         questions: questionsArr,
                         userId: user.id,
                         listingId,
@@ -240,11 +236,7 @@ function PublishForm() {
                         },
                     }
                 );
-            // console.log({
-            //     ...data,
-            //     userId: user.id,
-            //     listingId,
-            // });
+
             toast.success("Successfully Published!");
             navigate("/dashboard/mylistings/veshVgSxqLHaTTXf");
         } catch {
