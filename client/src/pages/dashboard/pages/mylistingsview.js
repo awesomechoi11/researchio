@@ -1,11 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useMemo, useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import { useRecoilState } from "recoil";
-import { createListingProjectAtom } from "../../../components/atoms";
 import { useTable } from "react-table";
-import { randomId } from "../../../misc";
-import { useMongoDB, useRealmApp } from "../../../initMongo";
+import { useMongoDB } from "../../../initMongo";
 import DashboardGridBlock from "../components/DashboardGridBlock";
 import DashboardGridBlockItem from "../components/DashboardGridBlockItem";
 import * as Yup from "yup";
@@ -19,14 +16,19 @@ export default function MyListingsViewPage() {
     const [data, setData] = useState();
     const { db, user } = useMongoDB();
 
+    const fetchSetListing = useCallback(() => {
+        if (!db) return undefined;
+        return db
+            .collection("listings")
+            .findOne({ userId: user.id, listingId })
+            .then(setData);
+    }, [db, listingId, user.id]);
     //get listing
     useEffect(() => {
         if (!db) return;
 
-        db.collection("listings")
-            .findOne({ userId: user.id, listingId })
-            .then(setData);
-    }, [db, listingId]);
+        fetchSetListing();
+    }, [db, fetchSetListing]);
 
     console.log(listingId, data);
 
@@ -48,7 +50,7 @@ export default function MyListingsViewPage() {
                     <DashboardGridBlockItem
                         handleOptions={{
                             onEdit: async () => {
-                                setMode({ label: "edit" });
+                                setMode({ label: "edit-project", data: data });
                             },
                         }}
                     >
@@ -59,6 +61,13 @@ export default function MyListingsViewPage() {
                             </div>
                         </div>
                     </DashboardGridBlockItem>
+                    {mode.label === "edit-project" && (
+                        <ProjectForm
+                            setMode={setMode}
+                            itemData={data.project}
+                            fetchSetListing={fetchSetListing}
+                        />
+                    )}
                 </div>
                 {/* opening */}
                 <div className="fw-bold fs-big finalize-title">Opening</div>
@@ -377,9 +386,8 @@ function QuestionsDetailTable({ itemData }) {
     );
 }
 
-function ProjectForm({ setMode, mode }) {
-    const { refreshUserData } = useRealmApp();
-    const { updateUserData, user, db } = useMongoDB();
+function ProjectForm({ setMode, itemData, fetchSetListing }) {
+    const { user, db } = useMongoDB();
 
     const onSubmit = useCallback(async (values, { resetForm }) => {
         try {
@@ -391,40 +399,41 @@ function ProjectForm({ setMode, mode }) {
                     (newValues[fieldname] = values[idPrefix + fieldname])
             );
 
-            // await updateUserData(
-            //     {
-            //         $set: {
-            //             "projects.$": {
-            //                 projectId: mode.data.projectId,
-            //                 ...newValues,
-            //             },
-            //         },
-            //     },
-            //     {
-            //         userId: user.id,
-            //         "projects.projectId": mode.data.projectId,
-            //     }
-            // );
+            db.collection("users").updateOne(
+                {
+                    userId: user.id,
+                    "projects.projectId": itemData.projectId,
+                },
+                {
+                    $set: {
+                        "projects.$": {
+                            ...itemData,
+                            ...newValues,
+                        },
+                    },
+                }
+            );
 
-            // db.collection("listings").updateMany(
-            //     {
-            //         userId: user.id,
-            //         projectId: mode.data.projectId,
-            //     },
-            //     {
-            //         $set: {
-            //             "projects.$": {
-            //                 projectId: mode.data.projectId,
-            //                 ...newValues,
-            //             },
-            //         },
-            //     }
-            // );
+            await db.collection("listings").updateMany(
+                {
+                    userId: user.id,
+                    projectId: itemData.projectId,
+                },
+                {
+                    $set: {
+                        ...newValues,
+                        project: newValues,
+                    },
+                }
+            );
 
-            await refreshUserData();
+            await fetchSetListing();
 
             toast.success("Successfully Saved!");
             resetForm();
+            setMode({
+                label: "default",
+            });
         } catch {
             toast.error("Uh Oh! An error occured");
         }
@@ -443,9 +452,9 @@ function ProjectForm({ setMode, mode }) {
 
     const formik = useFormik({
         initialValues: {
-            "dashboard-newproject-title": "",
-            "dashboard-newproject-description": "",
-            "dashboard-newproject-website": "",
+            "dashboard-newproject-title": itemData.title,
+            "dashboard-newproject-description": itemData.description,
+            "dashboard-newproject-website": itemData.website,
         },
         validationSchema,
         onSubmit,
@@ -454,7 +463,7 @@ function ProjectForm({ setMode, mode }) {
     return (
         <div>
             <div className="divider" />
-            <div className="fw-bold fs-big">Create A New Project</div>
+            <div className="fw-bold fs-big">Edit Project</div>
             <form onSubmit={formik.handleSubmit}>
                 <FormikInput
                     id="dashboard-newproject-title"
@@ -472,28 +481,17 @@ function ProjectForm({ setMode, mode }) {
                     formik={formik}
                 />
                 <div className="submit-wrapper">
-                    {mode.label === "edit" ? (
-                        <span
-                            className="span-button"
-                            onClick={() => {
-                                setMode({ label: "add" });
-                            }}
-                            href="#"
-                        >
-                            cancel edit
-                        </span>
-                    ) : (
-                        <span
-                            className="span-button"
-                            onClick={() => {
-                                setMode({ label: "default" });
-                            }}
-                            href="#"
-                        >
-                            cancel
-                        </span>
-                    )}
-                    <button type="submit">{mode.label}</button>
+                    <span
+                        className="span-button"
+                        onClick={() => {
+                            setMode({ label: "default" });
+                        }}
+                        href="#"
+                    >
+                        cancel edit
+                    </span>
+
+                    <button type="submit">save</button>
                 </div>
             </form>
         </div>
