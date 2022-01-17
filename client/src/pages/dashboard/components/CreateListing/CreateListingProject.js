@@ -9,7 +9,6 @@ import * as Yup from "yup";
 import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useMongoDB, useRealmApp } from "../../../../initMongo";
-import * as Realm from "realm-web";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
 import clsx from "clsx";
@@ -74,22 +73,39 @@ export default function CreateListingProject() {
                             {}
                         );
                 } else if (mode.label === "edit") {
-                    await updateUserData(
-                        {
-                            $set: {
-                                "projects.$": {
-                                    projectId: mode.data.projectId,
-                                    ...newValues,
-                                },
-                            },
-                        },
+                    const projectData = user.customData.projects.find(
+                        (proj) =>
+                            proj.projectId ===
+                            listingProjectData.project.projectId
+                    );
+
+                    await db.collection("users").updateOne(
                         {
                             userId: user.id,
                             "projects.projectId": mode.data.projectId,
+                        },
+                        {
+                            $set: {
+                                "projects.$": {
+                                    ...projectData,
+                                    ...newValues,
+                                },
+                            },
                         }
                     );
 
-                    db.collection("listings").updateMany();
+                    db.collection("listings").updateMany(
+                        {
+                            userId: user.id,
+                            projectId: mode.data.projectId,
+                        },
+                        {
+                            $set: {
+                                ...newValues,
+                                project: newValues,
+                            },
+                        }
+                    );
 
                     setMode({
                         label: "default",
@@ -170,6 +186,8 @@ export default function CreateListingProject() {
                                             itemData.title,
                                         "dashboard-newproject-description":
                                             itemData.description,
+                                        "dashboard-newproject-website":
+                                            itemData.website,
                                     });
                                     resetProjectAtom();
                                 },
@@ -196,10 +214,10 @@ export default function CreateListingProject() {
                                 },
                             }}
                             className={clsx(
-                                fastEqual(
-                                    listingProjectData.project,
-                                    itemData
-                                ) && "selected"
+                                listingProjectData.project &&
+                                    listingProjectData.project.projectId ===
+                                        itemData.projectId &&
+                                    "selected"
                             )}
                             contentProps={{
                                 className: "content item-select-area",

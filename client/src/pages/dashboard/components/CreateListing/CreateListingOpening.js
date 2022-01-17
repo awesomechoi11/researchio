@@ -168,13 +168,17 @@ export default function CreateListingOpening() {
                             {}
                         );
                 } else if (mode.label === "edit") {
+                    const openingData = projectData.openings.find(
+                        (opening) => opening.openingId === mode.data.openingId
+                    );
+
                     await user.functions.updateOne(
                         "users",
                         { userId: user.id },
                         {
                             $set: {
                                 "projects.$[project].openings.$[opening]": {
-                                    openingId: mode.data.openingId,
+                                    ...openingData,
                                     ...newValues,
                                 },
                             },
@@ -187,6 +191,18 @@ export default function CreateListingOpening() {
                                 },
                                 { "opening.openingId": mode.data.openingId },
                             ],
+                        }
+                    );
+
+                    db.collection("listings").updateMany(
+                        {
+                            userId: user.id,
+                            "opening.openingId": mode.data.openingId,
+                        },
+                        {
+                            $set: {
+                                opening: newValues,
+                            },
                         }
                     );
                 }
@@ -218,7 +234,7 @@ export default function CreateListingOpening() {
                     .nullable()
                     .required("Required"),
                 "dashboard-opening-remote": Yup.string().required("Required"),
-                "dashboard-opening-availability": Yup.string()
+                "dashboard-opening-availability": Yup.number()
                     .required("Required")
                     .nullable(),
                 "dashboard-opening-startend": Yup.array()
@@ -394,10 +410,10 @@ export default function CreateListingOpening() {
                                 },
                             }}
                             className={clsx(
-                                fastEqual(
-                                    listingProjectData.opening,
-                                    itemData
-                                ) && "selected"
+                                listingProjectData.opening &&
+                                    listingProjectData.opening.openingId ===
+                                        itemData.openingId &&
+                                    "selected"
                             )}
                             contentProps={{
                                 className: "content item-select-area",
@@ -406,23 +422,20 @@ export default function CreateListingOpening() {
                                         listingProjectData.opening &&
                                         listingProjectData.opening.openingId ===
                                             itemData.openingId;
-                                    // fastEqual(
-                                    //     listingProjectData.opening,
-                                    //     itemData
-                                    // );
+
                                     if (isSelected) {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: undefined,
                                             settings: undefined,
-                                            questions: undefined,
+                                            questions: new Set(),
                                         });
                                     } else {
                                         setListingProjectData({
                                             ...listingProjectData,
                                             opening: itemData,
                                             settings: undefined,
-                                            questions: undefined,
+                                            questions: new Set(),
                                         });
                                     }
                                 },
