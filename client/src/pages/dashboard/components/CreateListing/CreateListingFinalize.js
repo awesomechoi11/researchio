@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
-import * as Realm from "realm-web";
 import { useMongoDB } from "../../../../initMongo";
 import DashboardGridBlockItem from "../DashboardGridBlockItem";
 import DashboardGridBlock from "../DashboardGridBlock";
@@ -177,7 +176,17 @@ function PublishForm() {
         createListingProjectAtom
     );
     const { db, user } = useMongoDB();
-
+    const projectData = user.customData.projects.find(
+        (proj) => proj.projectId === listingProjectData.project.projectId
+    );
+    const openingData = projectData.openings.find(
+        (opening) => opening.openingId === listingProjectData.opening.openingId
+    );
+    const questionsArr = listingProjectData.questions
+        ? openingData.questions.filter((question) =>
+              listingProjectData.questions.has(question.questionId)
+          )
+        : [];
     const onSubmit = useCallback(async (e) => {
         e.preventDefault();
 
@@ -190,10 +199,10 @@ function PublishForm() {
                 contact: user.customData.contact,
                 researchexperience: user.customData.researchexperience,
             };
-            let data = {};
-            Object.values(listingProjectData).forEach((val) => {
-                data = { ...data, ...val };
-            });
+            // let data = {};
+            // Object.values(listingProjectData).forEach((val) => {
+            //     data = { ...data, ...val };
+            // });
 
             await db.collection("listings").updateOne(
                 {
@@ -204,7 +213,9 @@ function PublishForm() {
                 {
                     $currentDate: { lastModified: true },
                     $set: {
-                        ...data,
+                        ...listingProjectData,
+                        ...listingProjectData.project,
+                        questions: questionsArr,
                         userId: user.id,
                         listingId,
                     },
