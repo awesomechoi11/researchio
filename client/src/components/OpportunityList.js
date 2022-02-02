@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSetRecoilState } from "recoil";
 import { modalAtomFamily } from "./atoms";
-
+import DefaultProfileImg from "../assets/default profile.png";
 dayjs.extend(relativeTime);
 
 export default function OpportunityList({ filterData }) {
@@ -14,24 +14,27 @@ export default function OpportunityList({ filterData }) {
 
     const [opportunities, setOpportunities] = useState(null);
     useEffect(() => {
+        // return;
         if (!filterData || !filter) return;
-        let filterKeys = Object.keys(filterData);
+        let filterDataKeys = Object.keys(filterData);
         let selectedKeys = Object.keys(filter);
 
-        let allFilled = filterKeys.every(
+        // scuffed validation
+        let allFilled = filterDataKeys.every(
             (filterKey) =>
-                filterKey === "_id" || selectedKeys.includes(filterKey)
+                filterKey === "_id" ||
+                selectedKeys.includes(`opportunities-${filterKey}`)
         );
 
-        if (allFilled) {
-            if (!db) return;
-            // console.log("fetch time!", parseFilter(filter));
-            db.collection("listings")
-                .find(parseFilter(filter))
-                .then(setOpportunities);
-        }
+        if (!allFilled) return;
+        if (!db) return;
+        // console.log("fetch time!", parseFilter(filter, filterData));
+        // return;
+        db.collection("listings")
+            .find(parseFilter(filter, filterData))
+            .then(setOpportunities);
     }, [filter]);
-
+    console.log(opportunities);
     return (
         <div className="opportunities-list">
             {opportunities &&
@@ -42,73 +45,69 @@ export default function OpportunityList({ filterData }) {
     );
 }
 
-function parseFilter(filter) {
+function parseFilter(filter, filterData) {
     let query = {};
-
-    Object.entries(filter).forEach(([filterKey, filterDetails]) => {
+    // console.log(filter, filterData);
+    // return;
+    Object.entries(filterData).forEach(([filterDataKey, filterDetails]) => {
         const {
             field: { path, type },
-            itemValue,
         } = filterDetails;
-
+        let itemValue;
+        // console.log(
+        //     filterDataKey,
+        //     filter[`opportunities-${filterDataKey}`],
+        //     filterDetails
+        // );
         switch (type) {
             case "Array":
+                itemValue = filter[`opportunities-${filterDataKey}`];
                 query[path] = { $all: [itemValue] };
                 break;
             default:
+                itemValue = filter[`opportunities-${filterDataKey}`].value;
                 query[path] = itemValue;
         }
     });
-
+    console.log(query);
     return query;
 }
 
 function ListItem({ listData }) {
     // console.log(listData);
 
-    const {
-        recruiterData,
-        topic,
-        programTitle,
-        views,
-        applied,
-        postDate,
-        opportunityType,
-        location,
-        majorsConsidered,
-        listingId,
-    } = listData;
+    const { recruiter, opening, settings, applied, title } = listData;
 
-    let relativePostDate = useMemo(() => dayjs(postDate).fromNow(), [postDate]);
+    let relativePostDate = useMemo(
+        () => dayjs(settings.publishDate).fromNow(),
+        [settings]
+    );
     const setModal = useSetRecoilState(modalAtomFamily("opportunity"));
 
     return (
         <div className="list-item">
             <div className="left">
-                <img
-                    src={recruiterData.imageSrc}
-                    alt={recruiterData.facilityName}
-                />
+                <img src={DefaultProfileImg} alt={recruiter.firstName} />
             </div>
             <div className="middle">
                 <div>
                     <span className="facility-name fs-big ">
-                        {recruiterData.facilityName}
+                        {opening.department}
                     </span>
 
                     <span>
                         {[relativePostDate, applied + " applied"].join(" · ")}
                     </span>
                 </div>
-                <div className="fc-light">{programTitle}</div>
+                <div className="fc-light">{title}</div>
                 <div className="fc-light">
                     {[
-                        majorsConsidered[0] +
-                            (majorsConsidered.length > 1
-                                ? ` & ${majorsConsidered.length} more`
+                        opening.majorsConsidered[0].label +
+                            (opening.majorsConsidered.length > 1
+                                ? ` & ${opening.majorsConsidered.length} more`
                                 : ""),
-                        location === "remote" ? "remote" : location.state,
-                        opportunityType,
+                        opening.remote === "remote" ? "remote" : opening.state,
+                        opening.opportunityType.label,
                     ].join(" · ")}
                 </div>
             </div>

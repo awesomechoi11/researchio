@@ -2,6 +2,10 @@ import { motion } from "framer-motion";
 import Dropdown from "./Dropdown";
 import useQueryParam from "./useQueryParam";
 import * as JSURL from "jsurl";
+import { FormikDropdown } from "./formikhelpers";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useMemo } from "react";
 
 const FilterTypes = {
     dropdown: Dropdown,
@@ -11,16 +15,70 @@ export default function OpportunityFilter({ filterData }) {
     let [filter, setFilter] = useQueryParam("opportunitesFilter");
     const onSelect = (selectUpdate) => {
         //
-        const selectData = JSURL.parse(selectUpdate.value);
-        setFilter({
-            ...filter,
-            [selectData.filterKey]: selectData,
-        });
+        // console.log(selectUpdate);
+        // const selectData = JSURL.parse(selectUpdate.value);
+        // setFilter({
+        //     ...filter,
+        //     [selectData.filterKey]: selectData,
+        // });
     };
 
+    const onSubmit = async (values) => {
+        // console.log(values);
+        // setFilter({
+        //     ...filter,
+        //     [selectData.filterKey]: selectData,
+        // });
+        // console.log(JSURL);
+        // const safeValues = JSURL.stringify(values);
+        setFilter(values);
+    };
+
+    const validationSchema = useMemo(
+        () =>
+            Yup.object({
+                "opportunities-departments": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                })
+                    .nullable()
+                    .required("required"),
+                "opportunities-locations": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                })
+                    .nullable()
+                    .required("required"),
+                "opportunities-majorsConsidered": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                })
+                    .nullable()
+                    .required("required"),
+                "opportunities-opportunityTypes": Yup.object({
+                    value: Yup.string().required(),
+                    label: Yup.string().required(),
+                })
+                    .nullable()
+                    .required("required"),
+            }),
+        []
+    );
+
+    const formik = useFormik({
+        initialValues: filter || {
+            "opportunities-departments": null,
+            "opportunities-locations": null,
+            "opportunities-majorsConsidered": null,
+            "opportunities-opportunityTypes": null,
+        },
+        validationSchema,
+        onSubmit,
+    });
+    // console.log(filterData);
     return (
         <div className="filters">
-            <motion.div className="dropdowns">
+            <form onSubmit={formik.handleSubmit}>
                 {Object.entries(filterData).map(([filterKey, filterValue]) => {
                     const { value, type, label, field } = filterValue;
 
@@ -29,38 +87,51 @@ export default function OpportunityFilter({ filterData }) {
                     if (!Comp) return undefined;
 
                     if (type === "dropdown") {
-                        let dropdownProps = {};
-
-                        if (filter && filter[filterKey]) {
-                            const currentVal = filter[filterKey];
-                            // console.log(currentVal);
-                            dropdownProps.value = {
-                                value: JSURL.stringify(currentVal),
-                                label: currentVal.itemValue,
-                            };
-                        }
-
                         return (
-                            <Dropdown
+                            <FormikDropdown
                                 key={filterKey}
-                                onChange={onSelect}
-                                className={filterKey + "-dropdown-toggle"}
-                                options={value.map((itemValue) => ({
-                                    value: JSURL.stringify({
-                                        filterKey,
-                                        field,
-                                        itemValue,
-                                    }),
-                                    label: itemValue,
-                                }))}
-                                placeholder={label}
-                                {...dropdownProps}
+                                id={`opportunities-${filterKey}`}
+                                label={label}
+                                options={value.map((itemValue) => {
+                                    let returnVal = {};
+                                    if (itemValue.value) {
+                                        returnVal = itemValue;
+                                        // returnVal.value = {
+                                        //     field,
+                                        //     value: itemValue.value,
+                                        // };
+                                    } else {
+                                        returnVal = {
+                                            label: itemValue,
+                                            value: itemValue,
+                                        };
+                                        // returnVal = {
+                                        //     value: { field, value: itemValue },
+                                        //     label: itemValue,
+                                        // };
+                                    }
+                                    // console.log(returnVal);
+                                    return returnVal;
+                                })}
+                                formik={formik}
+                                selectProps={{
+                                    onChange: (opt, e) => {
+                                        onSelect(opt);
+                                        formik.setFieldValue(
+                                            `opportunities-${filterKey}`,
+                                            opt
+                                        );
+                                    },
+                                }}
                             />
                         );
                     }
                     return undefined;
                 })}
-            </motion.div>
+                <div className="submit-wrapper">
+                    <button type="submit">GO</button>
+                </div>{" "}
+            </form>
         </div>
     );
 }

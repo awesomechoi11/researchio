@@ -17,7 +17,6 @@ import DashboardGridBlockItem from "../DashboardGridBlockItem";
 import DashboardGridBlock from "../DashboardGridBlock";
 import { useRecoilState } from "recoil";
 import { createListingProjectAtom } from "../../../../components/atoms";
-import fastEqual from "fast-deep-equal";
 import arrayOfMajors from "./listOfMajors";
 import arrayOfTechnicalSkills from "./arrayOfTechnicalSkills";
 import clsx from "clsx";

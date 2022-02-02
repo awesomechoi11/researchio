@@ -77,7 +77,9 @@ export default function ReasearchExperienceCard() {
                 "profile-researchexperience-type": Yup.object({
                     value: Yup.string().required(),
                     label: Yup.string().required(),
-                }),
+                })
+                    .nullable()
+                    .required("Required"),
                 "profile-researchexperience-title":
                     Yup.string().required("Required"),
                 "profile-researchexperience-citation":
@@ -88,7 +90,7 @@ export default function ReasearchExperienceCard() {
 
     const formik = useFormik({
         initialValues: {
-            "profile-researchexperience-type": "",
+            "profile-researchexperience-type": null,
             "profile-researchexperience-title": "",
             "profile-researchexperience-citation": "",
         },
@@ -178,7 +180,7 @@ export default function ReasearchExperienceCard() {
                                 }}
                             >
                                 <div>
-                                    {researchexperienceItemData.type.value} —{" "}
+                                    {researchexperienceItemData.type.label} —{" "}
                                     {researchexperienceItemData.title}
                                 </div>
                                 <div>{researchexperienceItemData.citation}</div>

@@ -1,7 +1,13 @@
-var faker = require("faker");
-var { nanoid } = require("nanoid");
+var { faker } = require("@faker-js/faker");
 const { MongoClient } = require("mongodb");
 const secrets = require("../secrets");
+
+const { customAlphabet } = require("nanoid");
+
+const randomId = customAlphabet(
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    16
+);
 
 const topics = [
     "Emergency Medicine Clinical Experience",
@@ -266,7 +272,14 @@ const websiteLinks = [
     "https://www.rsna.org/research/funding-opportunities/research-grants/medical-student-research-grant",
 ];
 
-const locations = ["address", "address", "address", "remote"];
+const locations = [
+    "inPerson",
+    "inPerson",
+    "inPerson",
+    "remote",
+    "inPerson",
+    "inPerson",
+];
 
 const prereqs = [
     "None",
@@ -1768,6 +1781,36 @@ const statesList = [
     "Nevada",
 ];
 
+const technicalSkills = [
+    "Southern Blot",
+    "Northern Blot",
+    "Western Blot",
+    "PCR",
+    "DNA Extraction",
+    "Protein Ex",
+    "RNA Ex",
+    "Gel Electrophoresis",
+    "Spectroscopy",
+    "Chromatography",
+    "Flowcytometry",
+    "Bioinformatics Tools",
+];
+
+const questionsList = [
+    "Tell me a little about your interests.",
+    "Why did you apply for this position?",
+    "What do you know about our company?",
+    "What do you consider your strongest skills?",
+    "What skills do you feel you could improve on?",
+    "How did you find out about this job?",
+    "How do you see yourself fitting in with our company culture?",
+    "Where do you see yourself in the future?",
+    "How would this job help you achieve your career goals?",
+    "How do your career goals align with our mission?",
+    "What do you value in the company you work for?",
+    "Do you have any questions about the job?",
+];
+
 function randomIntBetween(a, b) {
     return Math.floor(Math.random() * (b - a) + a);
 }
@@ -1778,14 +1821,77 @@ function randomFromArray(arr) {
     return arr[rand];
 }
 
+function generateOpening() {
+    let department = randomFromArray(departments);
+
+    let opptype = randomFromArray(opportunityTypes);
+    let opportunityType = { value: opptype, label: opptype };
+    let remote = randomFromArray(locations);
+    let availability = randomIntBetween(1, 5);
+    // date
+    // from 30 to 45 days in the future
+    // to 90 to 120 days in the future
+    let startend = [
+        faker.date.soon(randomIntBetween(30, 45)),
+        faker.date.soon(randomIntBetween(90, 120)),
+    ];
+    let deadline = faker.date.soon(randomIntBetween(15, 30));
+    let address1 = faker.address.streetAddress();
+    let address2 = faker.address.secondaryAddress();
+    let city = faker.address.city();
+    let state = randomFromArray(statesList);
+    let zipCode = faker.address.zipCode();
+    let description = randomFromArray(descriptions);
+    let prerequisites = randomFromArray(prereqs);
+    let majorsConsidered = [];
+    for (let index = 0; index < randomIntBetween(1, 5); index++) {
+        let owo = randomFromArray(departments);
+        majorsConsidered.push({ value: owo, label: owo });
+    }
+    let desiredTechnicalSkills = [];
+    for (let index = 0; index < randomIntBetween(0, 5); index++) {
+        let owo = randomFromArray(technicalSkills);
+        desiredTechnicalSkills.push({ value: owo, label: owo });
+    }
+
+    return {
+        department,
+        opportunityType,
+        remote,
+        availability,
+        startend,
+        deadline,
+        address1,
+        address2,
+        city,
+        state,
+        zipCode,
+        description,
+        prerequisites,
+        majorsConsidered,
+        desiredTechnicalSkills,
+    };
+}
+
+function generateProject() {
+    let description = randomFromArray(descriptions);
+    let title = randomFromArray(programTitles);
+    let website = randomFromArray(websiteLinks);
+
+    return {
+        title,
+        description,
+        website,
+    };
+}
+
 function generateListing(recruiterData) {
     let views = randomIntBetween(0, 1000);
     let applied = randomIntBetween(0, 32);
-    let programTitle = randomFromArray(programTitles);
-    let topic = randomFromArray(topics);
-    let websiteLink = randomFromArray(websiteLinks);
-    let location = randomFromArray(locations);
-    let remote = location === "remote";
+
+    let project = generateProject();
+    let opening = generateOpening();
+
     location = {
         zipCode: faker.address.zipCode(),
         city: faker.address.city(),
@@ -1797,90 +1903,96 @@ function generateListing(recruiterData) {
         timeZone: faker.address.timeZone(),
     };
 
-    let prereq = randomFromArray(prereqs);
-    let opportunityType = randomFromArray(opportunityTypes);
-    let department = randomFromArray(departments);
-    let description = randomFromArray(descriptions);
     let majorsConsidered = [];
     for (let index = 0; index < randomIntBetween(1, 5); index++) {
         majorsConsidered.push(randomFromArray(departments));
     }
-    let startDate = faker.date.future();
-    let postDate = faker.date.recent();
-    let deadline = faker.date.future();
-    let programDuration = randomFromArray(programDurations);
-    let listingId = nanoid(12);
+    let questions = [];
+    for (let index = 0; index < randomIntBetween(0, 3); index++) {
+        let question = randomFromArray(questionsList);
+        questions.push({
+            question,
+            maxCount: 500,
+            required: "required",
+            type: {
+                value: "freeResponse",
+                label: "Free Response",
+            },
+            questionId: randomId(),
+        });
+    }
+
+    let listingId = randomId();
+    let userId = randomId();
+    let projectId = randomId();
+
+    let settings = {
+        publishDate: faker.date.recent(randomIntBetween(1, 30)),
+        expireDate: faker.date.recent(randomIntBetween(30, 60)),
+        visibility: {
+            value: "public",
+            label: "Public",
+        },
+    };
 
     return {
         views,
         applied,
-        programTitle,
-        topic,
-        websiteLink,
-        location,
-        prereq,
-        opportunityType,
-        department,
-        description,
-        majorsConsidered,
-        startDate,
-        postDate,
-        deadline,
-        programDuration,
-        recruiterData,
         listingId,
-        remote,
+        userId,
+        opening,
+        project,
+        ...project,
+        projectId,
+        questions,
+        recruiter: recruiterData,
+        settings,
     };
 }
 
 function generateRecruiter() {
-    let principalInvestigator = randomFromArray(principalInvestigators);
-    let facility = randomFromArray(facilities);
-    let address = {
-        zipCode: faker.address.zipCode(),
-        city: faker.address.city(),
-        streetAddress: faker.address.streetAddress(),
-        secondaryAddress: faker.address.secondaryAddress(),
-        county: faker.address.county(),
-        country: faker.address.country(),
-        state: faker.address.state(),
-        timeZone: faker.address.timeZone(),
+    let firstName = faker.name.firstName();
+    let lastName = faker.name.lastName();
+    let nickname = "";
+    let pronouns = "";
+
+    let general = {
+        firstName,
+        lastName,
+        nickname,
+        pronouns,
+        role: {
+            value: "recruiter",
+            label: "Principal Investigator",
+        },
     };
-    let phoneNumber = faker.phone.phoneNumber();
-    let members = randomFromArray(memberChoices);
-    let name = faker.name.findName();
-    let role = randomFromArray(roleChoices);
-    let recruiterId = nanoid(12);
+
+    let education = [];
+    let contact = {};
+    let researchexperience = [];
 
     return {
-        principalInvestigator,
-        address,
-        phoneNumber,
-        members,
-        name,
-        role,
-        ...facility,
-        recruiterId,
+        general,
+        education,
+        contact,
+        researchexperience,
     };
 }
 
 function generateRecruiterAndListings() {
     // generate recruiter and its listings
-    let recruiterData = generateRecruiter();
-
+    let recruiter = generateRecruiter();
     let listings = [];
     let newListings = [];
     for (let index = 0; index < randomIntBetween(3, 10); index++) {
-        const listing = generateListing(recruiterData);
+        const listing = generateListing(recruiter);
         const listingId = listing.listingId;
         newListings.push(listing);
 
         listings.push(listingId);
     }
 
-    recruiterData.listings = listings;
-
-    return [recruiterData, newListings];
+    return [recruiter, newListings];
 }
 
 async function main() {
@@ -1893,19 +2005,19 @@ async function main() {
     await client.connect();
 
     const listingsCol = client.db("Cluster0").collection("listings");
-    const recruitersCol = client.db("Cluster0").collection("recruiters");
+    // const recruitersCol = client.db("Cluster0").collection("recruiters");
     // perform actions on the collection object
     let totalListings = [];
-    let totalRecruiters = [];
+    // let totalRecruiters = [];
     for (let index = 0; index < 5000; index++) {
         const [newRecruiter, newListings] = generateRecruiterAndListings();
         totalListings = totalListings.concat(newListings);
-        totalRecruiters.push(newRecruiter);
+        // totalRecruiters.push(newRecruiter);
     }
 
     // console.log(totalListings);
     await listingsCol.insertMany(totalListings);
-    await recruitersCol.insertMany(totalRecruiters);
+    // await recruitersCol.insertMany(totalRecruiters);
 
     await client.close();
 }

@@ -37,6 +37,7 @@ export function FormikDropdown({
     formik,
     className,
     options,
+    selectProps,
     ...props
 }) {
     return (
@@ -58,6 +59,7 @@ export function FormikDropdown({
                 error={formik.errors.state}
                 touched={formik.touched.state}
                 value={formik.values[id]}
+                {...selectProps}
             />
             <label htmlFor={id}>{label}</label>
             {hasError(formik, id) ? (

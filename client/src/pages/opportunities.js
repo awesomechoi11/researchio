@@ -21,7 +21,7 @@ export default function OpportunitiesPage() {
     }, [db]);
 
     return (
-        <div id="home">
+        <div id="opportunities">
             <div className="main">
                 <div className="fs-jumbo fw-bold title">
                     Find Research Opportunities

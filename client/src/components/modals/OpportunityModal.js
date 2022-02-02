@@ -5,6 +5,7 @@ import { modalAtomFamily } from "../atoms";
 import { useTable } from "react-table";
 import dayjs from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
+import DefaultProfileImg from "../../assets/default profile.png";
 
 export default function OpportunityModal() {
     const [modal, setModal] = useRecoilState(modalAtomFamily("opportunity"));
@@ -34,38 +35,29 @@ export default function OpportunityModal() {
 }
 
 function Inner({ listData }) {
-    const {
-        recruiterData,
-        // topic,
-        description,
-        programTitle,
-        views,
-        applied,
-        opportunityType,
-        department,
-        location,
-        startDate,
-        postDate,
-        deadline,
-        majorsConsidered,
-        listingId,
-        remote,
-    } = listData;
+    const { recruiter, opening, settings, description, applied, title, views } =
+        listData;
 
-    let relativePostDate = useMemo(() => dayjs(postDate).fromNow(), [postDate]);
-    let relativeStartDate = useMemo(
-        () => dayjs(startDate).fromNow(),
-        [startDate]
+    let relativePostDate = useMemo(
+        () => dayjs(settings.publishDate).fromNow(),
+        [settings]
     );
-    let relativeDeadline = useMemo(() => dayjs(deadline).fromNow(), [deadline]);
+    let relativeStartDate = useMemo(
+        () => dayjs(opening.startend[0]).fromNow(),
+        [opening]
+    );
+    let relativeDeadline = useMemo(
+        () => dayjs(opening.deadline).fromNow(),
+        [opening]
+    );
 
     const tableData = useMemo(
         () => [
             {
                 deadline: relativeDeadline,
-                location: remote ? "remote" : location.state,
-                opportunityType,
-                department,
+                location: opening.remote ? "remote" : opening.state,
+                opportunityType: opening.opportunityType.label,
+                department: opening.department,
                 startDate: relativeStartDate,
             },
         ],
@@ -106,15 +98,12 @@ function Inner({ listData }) {
         >
             <div className="basic-info">
                 <div className="left">
-                    <img
-                        src={recruiterData.imageSrc}
-                        alt={recruiterData.facilityName}
-                    />
+                    <img src={DefaultProfileImg} alt={recruiter.firstName} />
                 </div>
                 <div className="right">
                     <div>
                         <span className="facility-name fs-big ">
-                            {recruiterData.facilityName}
+                            {opening.department}
                         </span>
                     </div>
                     <div>
@@ -126,7 +115,7 @@ function Inner({ listData }) {
                             ].join(" · ")}
                         </span>
                     </div>
-                    <div className="fc-light">{programTitle}</div>
+                    <div className="fc-light">{title}</div>
                 </div>
             </div>
             <div className="user-utility">
@@ -144,10 +133,10 @@ function Inner({ listData }) {
                 </div>
                 <div>
                     <div className="label fc-light">majors considered</div>
-                    <div className="body">
-                        {majorsConsidered.map((major, index) => (
-                            <span className="pill" key={index + major}>
-                                {major}
+                    <div className="body pill-container">
+                        {opening.majorsConsidered.map((major, index) => (
+                            <span className="pill" key={index + major.label}>
+                                {major.label}
                             </span>
                         ))}
                     </div>
@@ -157,16 +146,17 @@ function Inner({ listData }) {
                     <div className="body principal-investigator">
                         <div className="left">
                             <img
-                                src={recruiterData.principalInvestigator.img}
-                                alt={recruiterData.principalInvestigator.name}
+                                src={DefaultProfileImg}
+                                alt={recruiter.general.firstName}
                             />
                         </div>
                         <div className="right">
                             <div>
-                                {recruiterData.principalInvestigator.name}
+                                {recruiter.general.firstName}{" "}
+                                {recruiter.general.lastName}
                             </div>
                             <div className="fc-light">
-                                {recruiterData.principalInvestigator.title}
+                                {recruiter.general.role.label}
                             </div>
                         </div>
                     </div>

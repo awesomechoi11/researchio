@@ -215,12 +215,18 @@ table {
     }
 }
 
+.pill-container {
+    // display: flex;
+    // gap: 2rem;
+    // justify-content: flex-start;
+}
 .pill {
     display: inline-block;
     padding: 1rem 2rem;
     border-radius: 4rem;
     background-color: variables.$color-primary-lightest;
     margin-right: 1rem;
+    margin: 1rem;
 }
 
 .error {

@@ -36,7 +36,7 @@ export default function Navbar() {
                                 : "are you a candidate?"}
                         </NavLink>
                     </div>
-                    <NavProfile />
+                    {/* <NavProfile /> */}
                 </div>
             </div>
         </div>

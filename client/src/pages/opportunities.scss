@@ -1,11 +1,22 @@
 @use "../sass/variables";
 
-#home {
+#opportunities {
     > .main {
         margin-top: 32rem;
         display: flex;
         flex-direction: column;
         align-items: center;
+        form {
+            display: flex;
+            align-items: flex-end;
+            gap: 2rem;
+            .select-wrapper {
+                min-width: 30rem;
+            }
+            .submit-wrapper {
+                margin-bottom: 4rem;
+            }
+        }
         > .title {
             margin-bottom: 8rem;
         }
