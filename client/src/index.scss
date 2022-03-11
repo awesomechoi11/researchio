@@ -227,6 +227,82 @@ table {
     background-color: variables.$color-primary-lightest;
     margin-right: 1rem;
     margin: 1rem;
+
+    &.UCLA {
+        background: #daebfe;
+        border: thin solid #ffb81c;
+        color: #2774ae;
+    }
+    &.UCDavis {
+        background: #f2f3f4;
+        border: thin solid #506380;
+        color: #022851;
+    }
+    &.UCSF {
+        color: #052049;
+        background: #f2f3f4;
+        border: thin solid #506380;
+    }
+    &.UCIrvine {
+        background: #0c2340;
+        border: thin solid #ffc72c;
+        color: #ffc72c;
+    }
+    &.HSSC {
+        color: #73000a;
+        background: #ffffff;
+        border: thin solid #73000a;
+    }
+    &.UCSD {
+        color: #00629b;
+        background: #f2f3f4;
+        border: thin solid #c69214;
+    }
+    &.USC {
+        color: #990000;
+        background: #ffcc00;
+        border: thin solid #990000;
+    }
+    &.SDSU {
+        color: #c41230;
+        background: #ffffff;
+        border: thin solid #000000;
+    }
+    &.UMass {
+        color: #881c1c;
+        background: #ffffff;
+        border: thin solid #881c1c;
+    }
+    &.TJU {
+        color: #1a2650;
+        background: #67bae0;
+        border: thin solid #1a2650;
+    }
+    &.UChicago {
+        color: #810100;
+        background: #ffffff;
+        border: thin solid #810100;
+    }
+    &.Harvard {
+        color: #000000;
+        background: #a51c30;
+        border: thin solid #000000;
+    }
+    &.OUHSC {
+        color: #841617;
+        background: #ffffff;
+        border: thin solid #841617;
+    }
+    &.WFU {
+        color: #000000;
+        background: #ffffff;
+        border: thin solid #a67f31;
+    }
+    &.RUSH {
+        color: #233d2c;
+        background: #c08c41;
+        border: thin solid #497157;
+    }
 }
 
 .error {

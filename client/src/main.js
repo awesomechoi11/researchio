@@ -18,6 +18,7 @@ import CreateListingPage from "./pages/dashboard/pages/createlisting";
 import DashboardHome from "./pages/dashboard/pages/dashboardhome";
 import MyListingsPage from "./pages/dashboard/pages/mylistings";
 import MyListingsViewPage from "./pages/dashboard/pages/mylistingsview";
+import DiscoverResearchersPage from "./pages/discover/researchers/discoverresearchers.page";
 
 export default function Main() {
     const { user, logIn, RealmApp } = useRealmApp();
@@ -53,6 +54,10 @@ export default function Main() {
 
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route
+                        path="/discover"
+                        element={<DiscoverResearchersPage />}
+                    />
+                    <Route
                         path="/confirm-email"
                         element={<EmailConfirmPage />}
                     />
@@ -71,6 +76,7 @@ export default function Main() {
                     <Route path="/" element={<Navbar />} />
                     <Route path="/newsletter" element={<Navbar />} />
                     <Route path="/opportunities" element={<Navbar />} />
+                    <Route path="/discover" element={<Navbar />} />
                     <Route
                         path="/principal-investigator"
                         element={<Navbar />}

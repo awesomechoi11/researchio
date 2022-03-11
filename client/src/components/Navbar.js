@@ -19,6 +19,7 @@ export default function Navbar() {
                     </div>
                     <div className="buttons">
                         <NavLink to="/opportunities">opportunities</NavLink>
+                        <NavLink to="/discover">discover</NavLink>
                         <NavLink to="/newsletter">early access</NavLink>
                     </div>
                 </div>

@@ -33,7 +33,7 @@ export default function OpportunityList({ filterData }) {
         db.collection("listings")
             .find(parseFilter(filter, filterData))
             .then(setOpportunities);
-    }, [filter]);
+    }, [filter, db, filterData]);
     console.log(opportunities);
     return (
         <div className="opportunities-list">
