@@ -25,27 +25,15 @@
 
 ## Key Interactions
 
-* **PixiJs**
-    - Bulge on cursor
-    - Variable Noise filters
-    - Scroll-based Visual Efects
-    	- RGB splits
-        - Blur
-        - Motion Blur
-* **Page Transitions**
-    - Full page transitions
-    - Waits for assets to load
-* **Components**
-	- Webgl/ Pixijs
-	- Parallax
-    - Micro-position
-    - On-scroll reveal
-    - Mouse/ Scroll Interactions
-    - Before/ After Sliders
-    - Image Zoom
-* **Loaders**
-    - Page waits for assets to load before showing
-    - Graceful image reveals
+* **Email Notifications**
+    - Welcome Email on Newsletter Signup
+* **Discover Page**
+    - Full Text search 55,000+ profiles, powered by MongoDB
+    - Data scraped from 17+ public websites.
+* **Listing Page**
+	- Browse 40,000+ listings with various search options. 
+* **Signup Flow**
+	- Email signup with a timed email verification
 
 
 
