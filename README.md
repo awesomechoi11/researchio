@@ -9,7 +9,7 @@
   <br>
 </h1>
 
-<h4 align="center">Portfolio of Chris Orozco, a photographer. </h4>
+<h4 align="center">Main website for re-search.io, a place to find research opportunities. </h4>
 <br>
 
 
