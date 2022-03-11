@@ -85,7 +85,7 @@ Made possible by:
 ---
 ## Check These Out
 
-- [kongee](https://github.com/awesomechoi11/thehumanexperience) - Portfolio of Sally (Hyunji) Kim, a UI/UX designer. 
+- [kongee](https://github.com/awesomechoi11/kongee) - Portfolio of Sally (Hyunji) Kim, a UI/UX designer. 
 - [thehumanexperience](https://github.com/awesomechoi11/thehumanexperience) - Portfolio of Chris Orozco, a photographer. 
 
 ---
